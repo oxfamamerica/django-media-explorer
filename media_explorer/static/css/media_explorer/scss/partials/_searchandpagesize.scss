@@ -1,0 +1,29 @@
+.select-page-size{
+	height: $large-button-height;
+	font-size: $large-font-size;
+	.page-size-wrapper{
+		float: right;
+		line-height: $large-button-height;
+	}
+}
+
+.search-bar{
+	height: $large-button-height;
+	font-size: $large-font-size;
+	padding-left: 0;
+	.search-content-wrapper{
+		*{
+			float: right;
+		}
+		input{
+			height: $large-button-height;
+			line-height: $large-button-height;
+			width: $search-width;
+			padding-left: $cell-padding;
+		}
+		button{
+			width: $clear-search-button-width;
+		}
+	}
+
+}

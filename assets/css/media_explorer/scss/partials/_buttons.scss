@@ -1,0 +1,31 @@
+.image-toggle, .video-toggle, .mg-toggle{
+	width: $toggle-width;
+}
+
+.btn-primary{
+	background-color: $primary;
+	border: none;
+	&:hover{
+		background-color: $primary-focused;
+	}
+	&:focus{
+		background-color: $primary-focused;
+	}
+}
+
+.btn-success{
+	background-color: $success;
+	border: none;
+	&:hover{
+		background-color: $success-focused;
+	}
+}
+
+.btn.btn-lg{
+	font-size: $large-font-size;
+	font-weight: bold;
+}
+
+.btn{
+	border-radius: 0;
+}

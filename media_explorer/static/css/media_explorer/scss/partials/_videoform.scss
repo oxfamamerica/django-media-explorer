@@ -1,0 +1,52 @@
+.video-form{
+	margin: $general-margin 0;
+	textarea{
+		width: $video-form-text-area-width;
+		max-width: 100%;
+		&.video-name-input,
+		&.video-credit-input{
+			height: $video-form-input-height1;
+		}&.video-description-input{
+			height: $video-form-input-height2;
+		}
+
+	}
+
+	.btn{
+		margin: $cell-padding 0 $general-margin;
+		width: 25%;
+	}
+}
+
+.video-thumbnail-upload{
+	background-color: $primary;
+	color: white;
+	font-size: $large-font-size;
+	line-height: $large-button-height;
+	height: $large-button-height;
+	padding: 0 $cell-padding;
+	cursor: pointer;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+
+	&:hover, &:active, &:focus{
+		background-color: $primary-focused;
+	}
+
+	input{
+		display:none;
+	}
+
+	&.main-video-form{
+		display: block;
+		width: 25%;
+	}
+
+	&.inline-video-form{
+		width: 100%;
+		top: 50%;
+		@include vertically-align(-50%);
+	}
+}

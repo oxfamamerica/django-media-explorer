@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Django Media Explorer</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/static/css/media_explorer/stylesheets/vendor/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/media_explorer/stylesheets/vendor/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/media_explorer/stylesheets/vendor/loading-bar/loading-bar.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/media_explorer/stylesheets/main.min.css">
+</head>
+{% verbatim %}
+<body class="container" ng-app="mediaExplorer" ng-controller="GlobalController">
+	<header>
+		<h2>Django Media Explorer</h2>
+		<!--[if lt IE 10]>
+		<div class="row">
+			<div class="ie-alert col-md-8" ng-hide="ie-alert-toggle">
+				<p>It looks like you're using an older version of Internet Explorer. While we're working to improve
+				compatibility with older browsers, Django Media Explorer is currently only available in read-only mode
+				in Internet Explorer version 9 or earlier. Additionally, some objects may not display correctly.
+				To obtain full functionality from this application, consider upgrading your browser to a modern alternative. 
+				Please visit <a href="http://www.browsehappy.com">Browse Happy</a> for a list of up-to-date web browsers.
+			</div>
+		</div>
+		<![endif]-->
+	</header>
+	<main>
+		<div class="row">
+			<tabset class="col-md-12">
+				<!-- Image Tab -->
+				<tab heading="Images" class="image-tab" id="image-tab" ng-click="activeTabService.changeActiveTab(1);">
+					<imagetab/>
+				</tab>				
+				<!-- Video/MM Tab -->
+				<tab heading="Videos/Multimedia" class="video-tab" id="video-tab" ng-click="activeTabService.changeActiveTab(2);">
+					<videotab/>
+				</tab>
+				<!-- Media Gallery Tab -->
+				<tab heading="Media Galleries" class="media-gallery-tab" id="mgtab" ng-click="activeTabService.changeActiveTab(3);">
+					<mgtab/>
+				</tab>
+			</tabset>
+		</div>
+	</main>
+</body>
+{% endverbatim %}
+
+<script type="text/javascript" src="/static/js/media_explorer/vendor/vendor.js"></script>
+<script type="text/javascript" src="/static/js/media_explorer/utility/cookie.js"></script>
+<script type="text/javascript" src="/static/js/media_explorer/utility/windowcontrol.js"></script>
+<script type="text/javascript" src="/static/js/media_explorer/angular/app/app.js"></script>
+</html>

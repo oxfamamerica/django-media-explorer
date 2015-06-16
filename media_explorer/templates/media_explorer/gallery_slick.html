@@ -1,0 +1,64 @@
+
+{% block extra_js %}
+<script type="text/javascript" src="/static/slick/js/slick.min.js"></script>
+<script type="text/javascript" src="/static/slick/js/oa.slick.js"></script>
+{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="/static/slick/css/slick.css">
+<link rel="stylesheet" type="text/css" href="/static/slick/css/slick-theme.css">
+{% endblock %}
+{% load media_explorer_tags %}
+
+<section class="cmpnt cmpnt-border media-gallery">
+<div class="fancy-bottom">
+<div class="slider">
+
+{% for ge in galleryelements %}
+    {% if ge.element.type == "video" %}
+    {% else %}
+    <div>
+        <img data-lazy="{% get_image_url_from_size ge.element.id "1220x762" "800x500" %}" />
+    </div>
+    {% endif %}
+{% endfor %}
+
+
+
+</div>
+</div>
+
+<div class="slider-thumbs-n-text">
+
+<div class="slider-nav">
+{% for ge in galleryelements %}
+    {% if ge.element.type == "video" %}
+    {% else %}
+    <div>
+        {% if ge.element.thumbnail_image_url %}
+            <img src="{{ ge.element.thumbnail_image_url }}" />
+        {% else %}
+            <img src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
+        {% endif %}
+    </div>
+    {% endif %}
+{% endfor %}
+</div>
+
+<div class="slider-captions">
+{% for ge in galleryelements %}
+    <div>
+    {% if ge.description %}
+        <p>{{ge.description}}</p>
+    {% endif %}
+    {% if ge.credit %}
+        <p><small>{{ge.credit}}</small></p>
+    {% endif %}
+    </div>
+
+{% endfor %}
+</div>
+
+</div>
+
+</section>
+

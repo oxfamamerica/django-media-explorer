@@ -1,0 +1,41 @@
+{% load media_explorer_tags %}
+
+        <section class="cmpnt cmpnt-border media-gallery">
+            <div id="slider" class="flexslider fancy-bottom">
+                <ul class="slides">
+                    {% for ge in galleryelements %}
+                    <li>
+                        {% if ge.element.type == "video" %}
+                            {{ge.element.video_embed|clean_embed|safe}}
+                        {% else %}
+                            <img src="{% get_image_url_from_size ge.element.id "800x500" %}" />
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="flexslider-thumbs-n-text">
+                <div id="carousel" class="flexslider">
+                    <ul class="slides">
+                    {% for ge in galleryelements %}
+                    <li>
+                        <a href="">
+                            <img style="width:115px;height:87px;" src="{{ge.element.thumbnail_image_url}}" />
+                        </a>
+                    </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div id="captions" class="flexslider">
+                    <ul class="slides">
+                    {% for ge in galleryelements %}
+                    <li>
+                        {% if ge.description %}<p>{{ge.description}}</p>{% endif %}
+                        {% if ge.credit %}<small>{{ge.credit}}</small>{% endif %}
+                    </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!-- END MEDIA GALLERY -->

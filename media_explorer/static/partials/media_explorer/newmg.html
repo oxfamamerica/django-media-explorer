@@ -1,0 +1,152 @@
+<div class="add-media-gallery-view" ng-show="mgService.mgViewToggle">
+	<form class="new-mg-form row" id="newMGForm" enctype="multipart/form-data">
+		<div class="new-mg-name-input-wrapper col-md-3">
+			<label>Name*:</label><br/>
+			<textarea class="new-mg-name-input" ng-model="mgService.newMG.name"></textarea>
+		</div>
+		<div class="new-mg-description-input-wrapper col-md-6">
+			<label>Description*:</label><br/>
+			<textarea class="new-mg-description-input" ng-model="mgService.newMG.description"></textarea>
+		</div>
+		<div class="top-button-bar button-bar col-md-3" ng-show="mgService.mgViewToggle">
+			<button type="button" class="btn btn-danger" ng-click="cancelGalleryCreation()">Cancel</button>
+			<button type="button" class="btn btn-success" ng-disabled="!mgService.newMG.name || !mgService.newMG.description" ng-click="addNewMG()">Save</button>
+		</div>
+	</form>
+	<div class="fine-print">
+		<p>*: Required </p>
+	</div>
+	<table class="new-mg-table">
+		<colgroup class="row">
+			<col span="1" class="col-sm-1">
+			<col span="1" class="col-sm-2">
+			<col span="1" class="col-sm-2">
+			<col span="1" class="col-sm-3">
+			<col span="1" class="col-sm-1">
+			<col span="1" class="col-sm-1">
+			<col span="1" class="col-sm-1">
+			<col span="1" class="col-sm-1">
+		</colgroup>
+		<thead>
+			<tr>
+				<th class="table-header type-head">
+					<span class="type-head-text">Type</span>
+				</th>
+				<th class="table-header preview-head">
+					<span class="preview-head-text">Preview</span>
+				</th>
+				<th class="table-header name-head">
+					<span class="name-head-text">Name</span>
+				</th>
+				<th class="table-header description-head">
+					<span class="description-head-text">Description</span>
+				</th>
+				<th class="table-header credit-head sortable">
+					<span class="credit-head-text">Credit</span>
+				</th>
+				<th class="table-header date-head sortable">
+					<span class="date-head-text">Date</span>
+				</th>
+				<th class="table-header edit-head">
+					<span class="edit-head-text">Edit</span>
+				</th>
+				<th class="table-header remove-head">
+					<span class="remove-head-text">Remove</span>
+				</th>
+			</tr>
+		</thead>
+		<tbody ng-show="mgService.newMG.elements.length" ng-model="mgService.newMG.elements" ui-sortable="sortableOptions">
+			<tr ng-repeat="element in mgService.newMG.elements">
+				<td class="type-cell col-sm-1">
+					<div class="content-cell-wrapper">
+						<div class="img-cell-wrapper">
+							<div ng-show="element.type == 'image'">
+								<i class="fa fa-photo fa-2x"></i><br/>
+								<span>Image</span>
+							</div>
+							<div ng-hide="element.type == 'image'">
+								<i class="fa fa-video-camera fa-2x"></i><br/>
+								<span>Video/Multimedia</span>
+							</div>
+						</div>
+					</div>
+				</td>
+				<td class="preview-cell col-sm-2">
+					<div class="content-cell-wrapper">
+						<div class="img-cell-wrapper">
+							<div class="backdrop">
+								<a class="preview-link" ng-click="openLightbox(mgService.newMG.elements, $index)">
+									<img ng-src="{{element.thumbnail_image_url}}">
+								</a>
+							</div>
+						</div>
+					</div>
+				</td>
+				<td class="name-cell col-sm-2">
+					<div class="content-cell-wrapper">
+						<span class="new-mg-element-name">{{element.name}}</span>
+					</div>
+				</td>
+				<td class="description-cell col-sm-3">
+					<div class="content-cell-wrapper" ng-class="{'no-scroll': editMode}">
+						<span ng-hide="editMode" class="new-mg-element-description">{{element.mgDescription}}</span>
+						<textarea ng-show="editMode" ng-model="element.editDescription"></textarea>
+					</div>
+				</td>
+				<td class="credit-cell col-sm-1">
+					<div class="content-cell-wrapper" ng-class="{'no-scroll': editMode}">
+						<span class="new-mg-element-assets" ng-hide="editMode">{{element.mgCredit}}</span>
+						<textarea ng-show="editMode" ng-model="element.editCredit"></textarea>
+					</div>
+				</td> 
+				<td class="date-cell col-sm-1">
+					<div class="content-cell-wrapper">
+						<span class="new-mg-element-date">{{element.created_at}}</span>
+					</div>
+				</td>
+				<td class="edit-cell">
+						<div class="content-cell-wrapper">
+							<button ng-show="editMode" type="button" class="btn btn-success" ng-click="updateElementInNewMG(element); editMode = false;">OK</button>
+							<button ng-show="editMode" type="button" class="btn btn-danger" ng-click="editMode = false;">Cancel</button>
+							<div class="img-cell-wrapper">
+								<div ng-hide="editMode" class="edit-wrapper" ng-click="editMode = true;">
+									<i class="fa fa-pencil fa-3x edit"></i>
+								</div>
+							</div>
+						</div>
+					</td>
+				<td class="remove-cell col-sm-1">
+					<div class="content-cell-wrapper">
+						<div class="img-cell-wrapper">
+							<div class="remove-wrapper">
+								<span class="fa-stack fa-2x" ng-click="removeElementFromNewMg(element)">
+									<i class="fa fa-circle fa-stack-2x"></i>
+									<i class="fa fa-times fa-stack-1x"></i>
+								</span>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="new-mg-table-placeholder placeholder" ng-hide="mgService.newMG.elements.length">
+		<p>Add some media to get started! Drag and drop to rearrange elements.</p>
+	</div>
+	<div class="button-bar-wrapper row">
+		<div class="bottom-button-bar button-bar col-md-offset-9 col-md-3" ng-show="mgService.mgViewToggle">
+			<button type="button" class="btn btn-danger" ng-click="cancelGalleryCreation()">Cancel</button>
+			<button type="button" class="btn btn-success" ng-disabled="!mgService.newMG.name || !mgService.newMG.description" ng-click="addNewMG()">Save</button>
+		</div>
+	</div>
+	<div class="add-asset-tab-wrap row">
+		<tabset class="col-md-12">
+			<tab heading="Add Images" id="new-mg-image-tab">
+				<imagetab/>
+			</tab>
+			<tab heading="Add Videos" id="new-mg-video-tab">
+				<videotab/>
+			</tab>
+		</tabset>
+	</div>
+</div>

@@ -1,0 +1,54 @@
+a{
+	color: $primary;
+}
+
+.nav-tabs>li>a{
+	border-radius: 0 !important;
+}
+
+.tab-content{
+	border: $small-border-width solid $content-border;
+	border-top-width: 0px;
+	padding: $general-padding;
+}
+
+.placeholder{
+	width: 100%;
+	height: $cell-height;
+	background-color: $zebra-even;
+	text-align: center;
+	p{
+		line-height: $cell-height;
+		font-size: $large-font-size;
+	}
+}
+
+.sort-icon{
+	float: right;
+}
+
+.fine-print{
+	border-top: $thick-border-width solid $zebra-even;
+	font-size: $small-font-size;
+	width: 50%;
+}
+
+.ie-alert{
+	background-color: $ie-alert-background;
+	border: $small-border-width solid $ie-alert-border;
+	font-size: $general-font-size;
+	color: $ie-alert-text;
+	padding: $general-padding;
+	padding-bottom: 4px;
+	margin-left: $general-margin;
+	margin-bottom: $general-margin;
+}
+
+@mixin vertically-align($offset){
+	position: relative;
+	-webkit-transform: translateY($offset);
+	-moz-transform: translateY($offset);
+	-ms-transform: translateY($offset);
+	-o-transform: translateY($offset);
+	transform: translateY($offset);
+}

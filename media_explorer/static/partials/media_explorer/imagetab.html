@@ -1,0 +1,201 @@
+<div class="image-tab-content content-wrapper" id="image-tab-content-wrapper">
+	<!-- Toggle -->
+	<div class="row">
+		<div class="col-md-4">
+			<!--[if !IE]>-->
+			<button type="button" class="btn btn-lg btn-primary image-toggle" ng-click="imageService.imageViewToggle = !imageService.imageViewToggle;">
+				<span ng-show="imageService.imageViewToggle"><i class="fa fa-times"></i>&nbsp;Close Form</span>
+				<span ng-hide="imageService.imageViewToggle"><i class="fa fa-upload"></i>&nbsp;Upload Image</span>
+			</button>
+			<!--<![endif]-->
+		</div>
+		<div class="col-md-3 col-md-offset-1 select-page-size">
+			<div class="page-size-wrapper">
+				<span>Items per page: </span>
+				<select ng-model="imageService.userPageSizeSelection" ng-options="pagesize.size as pagesize.size for pagesize in imageService.userPageSizes" ng-change="imageService.getFirst();"></select>
+			</div>
+		</div>
+		<div class="col-md-4 search-bar">
+			<div class="search-content-wrapper">
+				<button type="button" class="btn btn-primary btn-lg" ng-click="imageService.search(imageService.searchTerm);">Search</button>
+				<input type="text" ng-model="imageService.searchTerm" placeholder="&#xf002;&nbsp;Search images." style="font-family:Arial, FontAwesome" ng-keyup="$event.keyCode == 13 ? imageService.search(imageService.searchTerm) : null">
+			</div>
+		</div>
+	</div>
+	<!-- Add View -->
+	<!--[if !IE]>-->
+	<div class="add-image-view" ng-show="imageService.imageViewToggle">
+		<div class="dropzone-wrapper" ng-controller="DropzoneImageController">
+			<form dropzone="imageDropzoneConfig" class="dropzone"></form>
+		</div>
+	</div>
+	<!--<![endif]-->
+	<!-- Select View -->
+	<div class="select-image-view">
+		<table class="image-table">
+			<colgroup class="row">
+				<col span="1" class="col-sm-1">
+				<col span="1" class="col-sm-2">
+				<col span="1" class="col-sm-2">
+				<col span="1" class="col-sm-3">
+				<col span="1" class="col-sm-1">
+				<col span="1" class="col-sm-1">
+				<col span="1" class="col-sm-1">
+				<col span="1" class="col-sm-1">
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="table-header action-head">
+						<span class="action-head-text">Action</span>
+					</th>
+					<th class="table-header preview-head">
+						<span class="preview-head-text">Preview</span>
+					</th>
+					<th class="table-header name-head sortable" ng-click="imageService.sort('name');">
+						<span class="name-head-text">Name</span>
+						<i class="fa fa-sort sort-icon" ng-hide="imageService.sort_by == 'name'"></i>
+						<i class="fa fa-sort-asc sort-icon" ng-show="imageService.sort_by == 'name' && imageService.direction =='asc'"></i>
+						<i class="fa fa-sort-desc sort-icon" ng-show="imageService.sort_by == 'name' && imageService.direction =='desc'"></i>
+					</th>
+					<th class="table-header description-head">
+						<span class="description-head-text">Description</span>
+					</th>
+					<th class="table-header credit-head sortable" ng-click="imageService.sort('credit');">
+						<span class="credit-head-text">Credit</span>
+						<i class="fa fa-sort sort-icon" ng-hide="imageService.sort_by == 'credit'"></i>
+						<i class="fa fa-sort-asc sort-icon" ng-show="imageService.sort_by == 'credit' && imageService.direction =='asc'"></i>
+						<i class="fa fa-sort-desc sort-icon" ng-show="imageService.sort_by == 'credit' && imageService.direction =='desc'"></i>
+					</th>
+					<th class="table-header date-head sortable" ng-click="imageService.sort('created_at');">
+						<span class="date-head-text">Date</span>
+						<i class="fa fa-sort sort-icon" ng-hide="imageService.sort_by == 'created_at'"></i>
+						<i class="fa fa-sort-asc sort-icon" ng-show="imageService.sort_by == 'created_at' && imageService.direction =='asc'"></i>
+						<i class="fa fa-sort-desc sort-icon" ng-show="imageService.sort_by == 'created_at' && imageService.direction =='desc'"></i>
+					</th>
+					<th class="table-header edit-head">
+						<span class="edit-head-text">Edit</span>
+					</th>
+					<th class="table-header delete-head">
+						<span class="delete-head-text">Delete</span>
+					</th>
+				</tr>
+			</thead>
+			<tbody  ng-show="imageService.imageList">
+				<tr ng-repeat="image in imageService.imageList | startFrom: ((imageService.currentPage - 1) * imageService.userPageSizeSelection) % imageService.stats.page_size | limitTo:imageService.userPageSizeSelection">
+					<td class="action-cell">
+						<div class="content-cell-wrapper">
+							<div class="img-cell-wrapper">
+								<button type="button" class="btn btn-success insert-image-button" ng-show="currentActiveTab.activeTab==1" ng-click="insertImage(image)" ng-disabled="disableInsert">Insert</button>
+								<button type="button" class="btn btn-success add-image-button" ng-show="currentActiveTab.activeTab==3" ng-click="addElementToNewMG(image)">Add</button>
+							</div>
+						</div>
+					</td>
+					<td class="preview-cell">
+						<div class="content-cell-wrapper">
+							<div class="img-cell-wrapper">
+								<div class="backdrop">
+									<a class="preview-link" ng-click="openLightbox(imageService.imageList, ((imageService.currentPage - 1) * imageService.userPageSizeSelection) + $index)">
+										<img ng-src="{{image.thumbnail_image_url}}">
+									</a>	
+								</div>
+							</div>
+						</div>
+					</td>
+					<td class="name-cell">
+						<div class="content-cell-wrapper" ng-class="{'no-scroll': editMode}">
+							<span ng-hide="editMode" class="image-name">{{image.name}}</span>
+							<textarea ng-show="editMode" ng-model="image.editName" ng-init="image.editName=image.name"></textarea>
+						</div>
+					</td>
+					<td class="description-cell">
+						<div class="content-cell-wrapper" ng-class="{'no-scroll': editMode}">
+							<span ng-hide="editMode" class="image-description">{{image.description}}</span>
+							<textarea ng-show="editMode" ng-model="image.editDescription" ng-init="image.editDescription=image.description"></textarea>
+						</div>
+					</td>
+					<td class="credit-cell">
+						<div class="content-cell-wrapper" ng-class="{'no-scroll': editMode}">
+							<span ng-hide="editMode" class="image-credit">{{image.credit}}</span>
+							<textarea ng-show="editMode" ng-model="image.editCredit" ng-init="image.editCredit=image.credit"></textarea>
+						</div>
+					</td>
+					<td class="date-cell">
+						<div class="content-cell-wrapper">
+							<span class="image-date">{{image.created_at}}</span>
+						</div>
+					</td>
+					<td class="edit-cell">
+						<div class="content-cell-wrapper">
+							<!--[if (!IE) | (gte IE 10)]>-->
+							<button ng-show="editMode" type="button" class="btn btn-success" ng-disabled="!image.editName" ng-click="editImage(image); editMode = false;">Save</button>
+							<button ng-show="editMode" type="button" class="btn btn-danger" ng-click="editMode = false;">Cancel</button>
+							<div class="img-cell-wrapper">
+								<div ng-hide="editMode" class="edit-wrapper" ng-click="editMode = true;">
+									<i class="fa fa-pencil fa-3x edit"></i>
+								</div>
+							</div>
+							<!--<![endif]-->
+							<!--[if lt IE 10]>
+							<div class="img-cell-wrapper">
+								<div class="edit-wrapper-ie" ng-click="ieAlert();">
+									<span class="fa-stack fa-2x">
+										<i class="fa fa-pencil fa-stack-1x"></i>
+										<i class="fa fa-flip-horizontal fa-ban fa-stack-2x"></i>
+									</span>
+								</div>
+							</div>
+							<![endif]-->
+						</div>
+					</td>
+					<td class="delete-cell">
+						<div class="content-cell-wrapper">
+							<div class="img-cell-wrapper">
+								<!--[if (!IE) | (gte IE 10)]>-->
+								<div class="trash-wrapper" ng-click="deleteImage(image)">
+									<i class="fa fa-trash fa-3x trash"></i>
+								</div>
+								<!--<![endif]-->
+								<!--[if lt IE 10]>
+								<div class="trash-wrapper-ie" ng-click="ieAlert();">
+									<span class="fa-stack fa-2x">
+										<i class="fa fa-trash fa-stack-1x"></i>
+										<i class="fa fa-flip-horizontal fa-ban fa-stack-2x"></i>
+									</span>
+								</div>	
+								<![endif]-->
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="image-table-placeholder placeholder" ng-hide="imageService.imageList.length">
+			<p> No images available! </p>
+		</div>
+		<div class="pagination-controls row">
+			<div class="col-md-6 col-md-offset-3 pagination-wrapper">
+				<button type="button" class="btn btn-primary first-page" ng-disabled="imageService.currentPage == 1" ng-click="imageService.getFirst();">
+					<i class="fa fa-angle-double-left"></i>
+					<span>First</span>
+				</button>
+				<button type="button" class="btn btn-primary prev-page" ng-disabled="imageService.currentPage == 1" ng-click="imageService.getPrevious();">
+					<i class="fa fa-angle-left"></i>
+					<span>Previous</span>
+				</button>
+				<div class="page-count">
+					<span ng-show="imageService.getTotalUserPages() > 1">Page {{imageService.currentPage}} of {{imageService.getTotalUserPages()}}
+					</span>
+					<span ng-hide="imageService.getTotalUserPages() > 1">Page 1 of 1</span>
+				</div>
+				<button type="button" class="btn btn-primary next-page" ng-disabled="imageService.currentPage == imageService.getTotalUserPages()" ng-click="imageService.getNext();">
+					<span>Next</span>
+					<i class="fa fa-angle-right"></i>
+				</button>
+				<button type="button" class="btn btn-primary last-page" ng-disabled="imageService.currentPage == imageService.getTotalUserPages()" ng-click="imageService.getLast();">
+					<span>Last</span>
+					<i class="fa fa-angle-double-right"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

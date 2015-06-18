@@ -20,12 +20,12 @@ setup(
     download_url='https://pypi.python.org/pypi/django-media-explorer/',
     packages=find_packages(),
     include_package_data=True,
-    exclude_package_data = { 'assets': [] },
     zip_safe=False,
     install_requires=[
         'django<1.7',
         'micawber==0.3.2',
         'djangorestframework==2.4.4',
+        'Pillow==2.6.1',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

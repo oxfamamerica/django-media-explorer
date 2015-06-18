@@ -1,3 +1,4 @@
+*.example*
 gitcommit.sh
 gitpush.sh
 

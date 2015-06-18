@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from mezzanine.core.views import direct_to_template
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.generic import TemplateView
 
 from media_explorer.views import ElementStatsView, GalleryStatsView
 from rest_framework import routers
@@ -17,5 +17,5 @@ urlpatterns = patterns('',
     url(r'^api/media/galleries/(?P<pk>[0-9]+)$', GalleryDetail.as_view()),
     url(r'^api/media/galleries', GalleryList.as_view()),
     url(r'^api/media/galleryelements/(?P<pk>[0-9]+)$', GalleryElementDetail.as_view()),
-    url(r'^media_explorer/', staff_member_required(direct_to_template), {'template': 'admin/media_explorer/base.html'}, name='media_explorer')
+    url(r'^media_explorer/', staff_member_required(TemplateView.as_view(template_name='admin/media_explorer/base.html')), name='media_explorer')
 )

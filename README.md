@@ -40,15 +40,30 @@ Next add these settings. They are required by the Media Explorer.
 
 ```
 
-TODO - GET THE RECENT SETTINGS
+import os
+
+# Comment this if you have already set it
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Comment this if you have already set it
+STATIC_URL = "/static/"
+
+# Comment this if you have already set it
+STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
+
+# Comment this if you have already set it
+MEDIA_URL = STATIC_URL + "media/"
+
+# Comment this if you have already set it
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
 
 DME_RESIZE = True
 
+DME_VIDEO_THUMBNAIL_DEFAULT_URL = "/static/img/default_video.gif"
+DME_GALLERY_THUMBNAIL_DEFAULT_URL = "/static/img/default_gallery.gif"
+
 #This will be appended to settings.MEDIA_URL
 DME_RESIZE_DIRECTORY = "resized"
-
-DME_VIDEO_THUMBNAIL_DEFAULT_URL = "http://placehold.it/800x500/ff8800/ffffff"
-DME_GALLERY_THUMBNAIL_DEFAULT_URL = "http://placehold.it/800x500/ff8800/ffffff"
 
 DME_RESIZE_HORIZONTAL_ASPECT_RATIO = "8:5"
 DME_RESIZE_VERTICAL_ASPECT_RATIO = "320:414"
@@ -61,13 +76,15 @@ DME_RESIZE_WIDTHS = {
     "thumbnail": 200,
 }
 
+DME_PAGE_SIZE = 50
+
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
     ],
-    'DATETIME_FORMAT': "%Y-%m-%d %T"
+    'DATETIME_FORMAT': "%Y-%m-%d %T",
 }
 
 ```

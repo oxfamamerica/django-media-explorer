@@ -109,9 +109,25 @@ except ImportError:
 
 #How it works
 
-Read the examples to see how it works. 
+Read the examples to see how you can implement it in your apps. 
 
 https://github.com/oxfamamerica/media_explorer_example/
+
+##Template tags
+
+After you implement it in your apps you can display the media in your templates by using the following templatetags.
+
+```
+{% get_video element_id %}
+```
+
+```
+{% get_media_gallery element_id %}
+```
+
+```
+{% get_image_url_from_size element_id element_typ "1220x763" "orig_c"|safe %}
+```
 
 #Demo
 

@@ -26,8 +26,14 @@ Add these to your INSTALLED_APPS settings
 
 ```
     'rest_framework',
-    'media_explorer',
     'micawber.contrib.mcdjango',
+    'media_explorer',
+```
+
+Run the syncdb command to create all the database tables.
+
+```
+python manage.py syncdb
 ```
 
 Add these to your urls.py

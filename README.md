@@ -1,6 +1,6 @@
 # Django Media Explorer
 
-A Django application to manage your images, video/multimedia links and embeds and create slideshows.
+A Django application to manage your images, video links, embeds and create slideshows.
 
 **Table of Contents**
 

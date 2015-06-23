@@ -36,18 +36,7 @@ Add these to your urls.py
     ("^", include("media_explorer.urls")),
 ```
 
-Next add this to the bottom of your settings.
-
-```
-#Get media settings
-try:
-    from media_explorer_settings import *
-except ImportError:
-    pass
-
-```
-
-Create a file in the same folder as your *settings.py* file and name it *media_explorer_settings.py*. Copy and paste the following code into *media_explorer_settings.py*
+Create a file in the same folder as your **settings.py** file and name it **media_explorer_settings.py**. Copy and paste the following code into **media_explorer_settings.py**
 
 ```
 
@@ -101,6 +90,16 @@ REST_FRAMEWORK = {
 ```
 
 Set **DME_RESIZE = False** if you do not want your images resized. 
+
+Now import the **media_explorer_settings.py** file into your **settings.py** file by adding this to the bottom of your **settings.py** file.
+
+```
+try:
+    from media_explorer_settings import *
+except ImportError:
+    pass
+```
+
 
 #How it works
 

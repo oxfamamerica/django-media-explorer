@@ -36,7 +36,18 @@ Add these to your urls.py
     ("^", include("media_explorer.urls")),
 ```
 
-Next add these settings. They are required by the Media Explorer.
+Next add this to the bottom of your settings.
+
+```
+#Get media settings
+try:
+    from media_explorer_settings import *
+except ImportError:
+    pass
+
+```
+
+Create a file in the same folder as your *settings.py* file and name it *media_explorer_settings.py*. Copy and paste the following code into *media_explorer_settings.py*
 
 ```
 

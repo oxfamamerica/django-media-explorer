@@ -8,7 +8,7 @@ A Django application to manage your images, video links, embeds and create slide
 - [Installation](#installation)
 - [How it works](#how-it-works)
 - [Demo](#demo)
-- [TODO](#todo)
+- [Contributing](#contributing)
     
 #Dependencies
 
@@ -78,4 +78,12 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 #TODO
 - Add capability to save to AWS S3/Azzure etc.
 - Upgrade to latest Django version
+
+#Contributing
+
+Report a bug or request a feature by opening an issue here:
+https://github.com/oxfamamerica/django-media-explorer/issues
+
+
+You can contribute to the project by coding bug fixes and adding features. To do so first fork the project, add your code to your project and then submit a pull request.
 

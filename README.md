@@ -6,6 +6,7 @@ A Django application to manage your images, video/multimedia links and embeds an
 
 - [Dependencies](#dependencies)
 - [Installation](#installation)
+- [How it works](#how-it-works)
 - [TODO](#todo)
     
 #Dependencies
@@ -63,25 +64,11 @@ REST_FRAMEWORK = {
 
 Set **DME_RESIZE = False** if you do not want your images resized. 
 
-#Adding lead media (EXAMPLE 1)
+#How it works
 
-For this example we want to show a lead image, lead video or a lead media gallery on our existing blog/article etc. (The term 'lead' means it's the first thing shown on the page).
+Read the examples to see how it works. 
 
-##The Model
-
-We will assume that you have a model called **MyBlog**
-
-Add these fields to your model.
-
-```
-    LEAD_MEDIA_CHOICES = (('none','No lead'),('image','Image'),('video','Video'),('gallery','Gallery'))
-
-    lead_media_type = models.CharField(null=True,blank=True,max_length=25,choices=LEAD_MEDIA_CHOICES,default="none")
-    lead_media_id = models.IntegerField(blank=True,null=True)
-    lead_media_caption = models.CharField(blank=True,null=True,max_length=255)
-    lead_media_credit = models.CharField(blank=True,null=True,max_length=255)
-
-```
+https://github.com/oxfamamerica/media_explorer_example/
 
 #TODO
 - Add capability to save to AWS S3/Azzure etc.

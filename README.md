@@ -7,6 +7,7 @@ A Django application to manage your images, video links, embeds and create slide
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [How it works](#how-it-works)
+- [Demo](#demo)
 - [TODO](#todo)
     
 #Dependencies
@@ -69,6 +70,10 @@ Set **DME_RESIZE = False** if you do not want your images resized.
 Read the examples to see how it works. 
 
 https://github.com/oxfamamerica/media_explorer_example/
+
+#Demo
+
+Go to http://demos.oxfamamerica.org for a demo on this application.
 
 #TODO
 - Add capability to save to AWS S3/Azzure etc.

@@ -16,7 +16,7 @@ This version is strictly limited to Django 1.6.11 and below.
 
 #Installation
 
-Run these commands:
+Run this command:
 
 ```
 pip install django-media-explorer
@@ -28,6 +28,12 @@ Add these to your INSTALLED_APPS settings
     'rest_framework',
     'media_explorer',
     'micawber.contrib.mcdjango',
+```
+
+Add these to your urls.py
+
+```
+    ("^", include("media_explorer.urls")),
 ```
 
 Next add these settings. They are required by the Media Explorer.

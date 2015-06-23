@@ -17,7 +17,10 @@ This version is strictly limited to Django 1.6.11 and below.
 #Installation
 
 Run these commands:
+
+```
 pip install django-media-explorer
+```
 
 Add these to your INSTALLED_APPS settings
 

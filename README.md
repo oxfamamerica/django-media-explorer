@@ -42,7 +42,7 @@ Add these to your urls.py
     ("^", include("media_explorer.urls")),
 ```
 
-Create a file in the same folder as your **settings.py** file and name it **media_explorer_settings.py**. Copy and paste the following code into **media_explorer_settings.py**
+Create a file in the same folder as your **settings.py** file and name it **media_explorer_settings.py** and then copy and paste the following code into **media_explorer_settings.py**.
 
 ```
 

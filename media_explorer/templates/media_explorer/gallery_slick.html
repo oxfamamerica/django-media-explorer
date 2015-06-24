@@ -15,6 +15,7 @@
 
 {% for ge in galleryelements %}
     {% if ge.element.type == "video" %}
+        <div class="cmpnt-video">{{ge.element.video_embed|safe}}</div>
     {% else %}
     <div>
         <img data-lazy="{% get_image_url_from_size ge.element.id "1220x762" "800x500" %}" />
@@ -31,16 +32,13 @@
 
 <div class="slider-nav">
 {% for ge in galleryelements %}
-    {% if ge.element.type == "video" %}
-    {% else %}
     <div>
         {% if ge.element.thumbnail_image_url %}
-            <img src="{{ ge.element.thumbnail_image_url }}" />
+            <img style="max-width:60px" src="{{ ge.element.thumbnail_image_url }}" />
         {% else %}
-            <img src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
+            <img style="max-width:60px" src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
         {% endif %}
     </div>
-    {% endif %}
 {% endfor %}
 </div>
 

@@ -28,11 +28,13 @@ Add these to your INSTALLED_APPS settings
     'rest_framework',
     'micawber.contrib.mcdjango',
     'media_explorer',
+    'ckeditor',
 ```
 
 Add these to your urls.py
 
 ```
+    ("^ckeditor/", include("ckeditor.urls")),
     ("^", include("media_explorer.urls")),
 ```
 
@@ -93,6 +95,25 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%d %T",
 }
 
+CKEDITOR_JQUERY_URL = "http://code.jquery.com/jquery-1.11.2.min.js"
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'extraPlugins': 'media_explorer',
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source'],
+            ['MediaExplorer']
+        ]
+    }
+}
+
+
 ```
 
 Set **DME_RESIZE = False** if you do not want your images resized. 
@@ -106,6 +127,10 @@ except ImportError:
     pass
 ```
 
+Add the following javascript includes to your admin/base.html file.
+
+```
+```
 
 #How it works
 
@@ -127,6 +152,10 @@ After you implement it in your apps you can display the media in your templates 
 
 ```
 {% get_image_url_from_size element_id element_typ "1220x763" "orig_c"|safe %}
+```
+
+```
+{% if story.content %}{{ story.content | show_short_code | safe }}{% endif %}
 ```
 
 #Demo

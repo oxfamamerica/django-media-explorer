@@ -26,6 +26,7 @@ setup(
         'micawber==0.3.2',
         'djangorestframework==2.4.4',
         'Pillow==2.6.1',
+        'django-ckeditor==4.4.8',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

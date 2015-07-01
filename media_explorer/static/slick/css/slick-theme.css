@@ -256,7 +256,7 @@
     top:60px;
 }
 .slider-nav .slick-prev {
-    left: -60px;
+    left: -50px;
     background-image: url('/static/slick/img/prev.png');
     background-repeat: no-repeat;
     background-size: 40px 40px;

@@ -230,7 +230,7 @@
 
 .slider .slick-prev:before
 {
-    content: '\f190';
+    content: '←';
 }
 
 .slider .slick-next
@@ -239,7 +239,7 @@
 }
 .slider .slick-next:before
 {
-    content: '\f18e';
+    content: '→';
 }
 
 

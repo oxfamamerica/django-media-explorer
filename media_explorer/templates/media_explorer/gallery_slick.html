@@ -34,9 +34,9 @@
 {% for ge in galleryelements %}
     <div>
         {% if ge.element.thumbnail_image_url %}
-            <img style="max-width:60px" src="{{ ge.element.thumbnail_image_url }}" />
+            <img src="{{ ge.element.thumbnail_image_url }}" />
         {% else %}
-            <img style="max-width:60px" src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
+            <img src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
         {% endif %}
     </div>
 {% endfor %}

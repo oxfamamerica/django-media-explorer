@@ -228,19 +228,13 @@
     left: 5px;
 }
 
-.slider .slick-prev:before
-{
-    content: '←';
-}
+
 
 .slider .slick-next
 {
     right: 5px;
 }
-/*.slider .slick-next:before
-{
-    content: '→';
-}*/
+
 
 
 /* Direction Nav */

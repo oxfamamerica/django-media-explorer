@@ -252,11 +252,13 @@
     right: -50px;
     background-image: url('/static/slick/img/next.png');
     background-repeat: no-repeat;
+    background-size: 50px 50px;
 }
 .slider-nav .slick-prev {
     left: -50px;
     background-image: url('/static/slick/img/prev.png');
     background-repeat: no-repeat;
+    background-size: 50px 50px;
 }
 
 .slider-nav .slick-next.disabled {

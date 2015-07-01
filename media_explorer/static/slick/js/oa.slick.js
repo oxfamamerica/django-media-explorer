@@ -74,8 +74,7 @@ $(document).ready(function(){
 	  swipe:true,
 	  swipeToSlide: true,
 	  asNavFor: '.slider-nav',
-	  lazyLoad: 'ondemand',
-	  variableWidth: false
+	  lazyLoad: 'ondemand'
 	}).on({
 		beforeChange: function(event, slick, current_slide_index, next_slide_index) {
 	        $('.slider-nav .slick-slide[data-slick-index='+current_slide_index+']').removeClass('on');

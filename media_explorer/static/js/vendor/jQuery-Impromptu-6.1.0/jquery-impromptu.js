@@ -1,3 +1,6 @@
+/*! jQuery-Impromptu - v6.1.0 - 2015-03-15
+* http://trentrichardson.com/Impromptu
+* Copyright (c) 2015 Trent Richardson; Licensed MIT */
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define(['jquery'], factory);

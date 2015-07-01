@@ -97,7 +97,7 @@ REST_FRAMEWORK = {
 
 CKEDITOR_JQUERY_URL = "http://code.jquery.com/jquery-1.11.2.min.js"
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_UPLOAD_PATH = MEDIA_ROOT + "/uploads/"
 
 CKEDITOR_CONFIGS = {
     'default': {

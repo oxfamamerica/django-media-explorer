@@ -250,28 +250,24 @@
   -webkit-transition: all .3s ease;}
 .slider-nav .slick-next {
     right: -50px;
-    background-image: url('/static/slick/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/next.png');
     background-repeat: no-repeat;
-    background-position: 0 -300px;
 }
 .slider-nav .slick-prev {
     left: -50px;
-    background-position: 0 -150px;
-    background-image: url('/static/slick/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/prev.png');
     background-repeat: no-repeat;
 }
 
 .slider-nav .slick-next.disabled {
     right: -50px;
-    background-image: url('/static/slick/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/next_gray.png');
     background-repeat: no-repeat;
-    background-position: 0 -375px;
     cursor: default;
 }
 .slider-nav .slick-prev.disabled {
     left: -50px;
-    background-position: 0 -225px;
-    background-image: url('/static/slick/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/prev_gray.png');
     background-repeat: no-repeat;
     cursor: default;
 }

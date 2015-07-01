@@ -22,6 +22,15 @@ Run this command:
 pip install django-media-explorer
 ```
 
+NOTE: If you do not use the above method to install this application then you will need to install these additional dependencies.
+
+```
+pip install micawber==0.3.2
+pip install djangorestframework==2.4.4
+pip install Pillow==2.6.1
+pip install django-ckeditor==4.4.8
+```
+
 Add these to your INSTALLED_APPS settings
 
 ```

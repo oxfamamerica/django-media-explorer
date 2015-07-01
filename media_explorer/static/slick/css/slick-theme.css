@@ -249,28 +249,26 @@
   text-indent: -9999px;
   -webkit-transition: all .3s ease;}
 .slider-nav .slick-next {
-    right: -50px;
+    right: -60px;
     background-image: url('/static/slick/img/next.png');
     background-repeat: no-repeat;
-    background-size: 50px 50px;
+    background-size: 40px 40px;
+    top:60px;
 }
 .slider-nav .slick-prev {
-    left: -50px;
+    left: -60px;
     background-image: url('/static/slick/img/prev.png');
     background-repeat: no-repeat;
-    background-size: 50px 50px;
+    background-size: 40px 40px;
+    top:60px;
 }
 
 .slider-nav .slick-next.disabled {
-    right: -50px;
     background-image: url('/static/slick/img/next_gray.png');
-    background-repeat: no-repeat;
     cursor: default;
 }
 .slider-nav .slick-prev.disabled {
-    left: -50px;
     background-image: url('/static/slick/img/prev_gray.png');
-    background-repeat: no-repeat;
     cursor: default;
 }
 

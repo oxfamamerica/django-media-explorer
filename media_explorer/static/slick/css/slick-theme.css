@@ -290,13 +290,16 @@
     z-index: 1;
     transform: scale(1.08);
 }*/
+.slider-nav img{
+    border: 4px solid #eaeade;
+}
 .slider-nav .on img{
     display: block;
     position: relative;
     border: 4px solid #0C884A;
     box-shadow: inset 4px 4px 0 #0C884A, inset -4px -4px 0 #0C884A;
     z-index: 1;
-    transform: scale(1.08);
+    /*transform: scale(1.08);*/
 }
 
 /*.slider-nav .slick-center img, .slider-nav .slick-active img,   */

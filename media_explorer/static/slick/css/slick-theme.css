@@ -2,7 +2,7 @@
 /* Slider */
 .slick-loading .slick-list
 {
-    background: #fff url('./ajax-loader.gif') center center no-repeat;
+    background: #fff url('/static/slick/img/ajax-loader.gif') center center no-repeat;
 }
 
 /* Icons */
@@ -214,7 +214,7 @@
     height: 30px;
 }
 .slider .slick-prev:before,.slider .slick-next:before{
-    font-family:'FontAwesome';
+    font-family:'slick';
     font-size: 30px;
     line-height: 1;
     opacity: .75;
@@ -256,20 +256,20 @@
   -webkit-transition: all .3s ease;}
 .slider-nav .slick-next {
     right: -50px;
-    background-image: url('http://blogs2.oxfamamerica.org/static/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/sprite-s3564da1625.png');
     background-repeat: no-repeat;
     background-position: 0 -300px;
 }
 .slider-nav .slick-prev {
     left: -50px;
     background-position: 0 -150px;
-    background-image: url('http://blogs2.oxfamamerica.org/static/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/sprite-s3564da1625.png');
     background-repeat: no-repeat;
 }
 
 .slider-nav .slick-next.disabled {
     right: -50px;
-    background-image: url('http://blogs2.oxfamamerica.org/static/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/sprite-s3564da1625.png');
     background-repeat: no-repeat;
     background-position: 0 -375px;
     cursor: default;
@@ -277,7 +277,7 @@
 .slider-nav .slick-prev.disabled {
     left: -50px;
     background-position: 0 -225px;
-    background-image: url('http://blogs2.oxfamamerica.org/static/img/sprite-s3564da1625.png');
+    background-image: url('/static/slick/img/sprite-s3564da1625.png');
     background-repeat: no-repeat;
     cursor: default;
 }

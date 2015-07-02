@@ -342,3 +342,14 @@
 .video-thumb img { 
     width: 100%;
 }
+.slider-nav .on .video-thumb{
+    border: 4px solid #483d8b;
+    box-shadow: 4px 4px 0 #483d8b inset, -4px -4px 0 #483d8b inset;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+.slider-nav .on .video-thumb img{
+    border:0;
+    box-shadow: none;
+}

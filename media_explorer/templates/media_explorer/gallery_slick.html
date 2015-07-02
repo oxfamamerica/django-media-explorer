@@ -15,7 +15,7 @@
 
 {% for ge in galleryelements %}
     {% if ge.element.type == "video" %}
-        <div class="cmpnt-video">{{ge.element.video_embed|safe}}</div>
+        <div><div class="cmpnt-video">{{ge.element.video_embed|safe}}</div></div>
     {% else %}
     <div>
         <img data-lazy="{% get_image_url_from_size ge.element.id "1220x762" "800x500" %}" />

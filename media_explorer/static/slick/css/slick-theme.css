@@ -320,10 +320,16 @@
 }
 
 .cmpnt-video{
-    display: block;
     height: 0;
-    margin: 25px 0;
-    padding-bottom: 56.25%;
-    padding-top: 25px;
+    overflow: hidden;
+    padding-bottom: 50%;
+    padding-top: 20px;
     position: relative;
+}
+.cmpnt-video iframe {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }

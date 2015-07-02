@@ -18,7 +18,11 @@
         <div><div class="cmpnt-video">{{ge.element.video_embed|safe}}</div></div>
     {% else %}
     <div>
-        <img data-lazy="{% get_image_url_from_size ge.element.id "1220x762" "800x500" %}" />
+        {% if ge.element|has_size:"800x500,610x381" %}
+            <img data-lazy="{% get_image_url_from_size ge.element.id "800x500" "610x381" %}" />
+        {% else %}
+Image with size 800x500 not found.
+        {% endif %}
     </div>
     {% endif %}
 {% endfor %}
@@ -34,20 +38,14 @@
 {% for ge in galleryelements %}
     <div>
         {% if ge.element.type == "video" %}
-            {% if ge.element.thumbnail_image_url %}
-                <div class="video-thumb">
-                    <img src="{{ ge.element.thumbnail_image_url }}" />
-                </div>
-            {% else %}
-                <div class="video-thumb">
-                    <img src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
-                </div>
-            {% endif %}
-        {% else %}
-            {% if ge.element.thumbnail_image_url %}
+            <div class="video-thumb">
                 <img src="{{ ge.element.thumbnail_image_url }}" />
-            {% else %}
-                <img src="{% get_image_url_from_size ge.element.id "320x200" "160x100" %}" />
+            </div>
+        {% else %}
+            {% if ge.element|has_size:"160x100" %}
+                <img src="{% get_image_url_from_size ge.element.id "160x100" %}" />
+            {% elif ge.element.thumbnail_image_url %}
+                <img src="{{ ge.element.thumbnail_image_url }}" />
             {% endif %}
         {% endif %}
     </div>

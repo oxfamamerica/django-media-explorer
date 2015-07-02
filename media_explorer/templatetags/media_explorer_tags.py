@@ -47,6 +47,20 @@ def get_media_gallery(id,template="media_explorer/gallery_slick.html"):
 
     return ""
 
+def has_size(element, comma_separated_sizes):
+    try:
+        args = comma_separated_sizes.split(",")
+        if ResizedImage.objects.filter(image=element,size__in=args).exists():
+            return True
+        for size in args:
+            if ResizedImage.objects.filter(image=element,size=size).exists():
+                return True
+    except:
+        print traceback.format_exc()
+
+    print "It is false"
+    return False
+
 def get_image_url_from_size(id, *args):
     """
     The command may be {% get_image_url_from_size 123 "image|video|gallery" "800x500" "420x230" %}
@@ -110,17 +124,8 @@ def show_short_code(html):
 
     return ""
 
-def clean_embed(embed):
-    try:
-        #TODO
-        return embed
-    except:
-        print traceback.format_exc()
-
-    return ""
-
-register.filter('clean_embed', clean_embed)
 register.filter('show_short_code', show_short_code)
+register.filter('has_size', has_size)
 register.simple_tag()(get_media_gallery)
 register.simple_tag()(get_video)
 register.simple_tag()(get_inline_image)

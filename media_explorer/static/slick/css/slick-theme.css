@@ -333,3 +333,12 @@
     top: 0;
     width: 100%;
 }
+
+.video-thumb { 
+    /*width: 418px; */
+    max-height: 80px; 
+    overflow: hidden; 
+}
+.video-thumb img { 
+    width: 100%;
+}

@@ -319,4 +319,11 @@
  
 }
 
-
+.cmpnt-video{
+    display: block;
+    height: 0;
+    margin: 25px 0;
+    padding-bottom: 56.25%;
+    padding-top: 25px;
+    position: relative;
+}

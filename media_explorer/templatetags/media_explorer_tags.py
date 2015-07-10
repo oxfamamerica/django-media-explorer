@@ -58,7 +58,6 @@ def has_size(element, comma_separated_sizes):
     except:
         print traceback.format_exc()
 
-    print "It is false"
     return False
 
 def get_image_url_from_size(id, *args):

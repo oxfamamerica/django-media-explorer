@@ -1,0 +1,72 @@
+
+{% block extra_js %}
+<script type="text/javascript" src="/static/slick/js/slick.min.js"></script>
+<script type="text/javascript" src="/static/slick/js/oa.slick.js"></script>
+{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="/static/slick/css/slick.css">
+<link rel="stylesheet" type="text/css" href="/static/slick/css/slick-theme.css">
+{% endblock %}
+{% load media_explorer_tags %}
+
+<section class="cmpnt cmpnt-border media-gallery">
+<div class="fancy-bottom">
+<div class="slider">
+
+{% for ge in galleryelements %}
+    {% if ge.element.type == "video" %}
+        <div><div class="cmpnt-video">{{ge.element.video_embed|safe}}</div></div>
+    {% else %}
+    <div>
+        {% if ge.element|has_size:"800x500,610x381" %}
+            <img data-lazy="{% get_image_url_from_size ge.element.id "800x500" "610x381" %}" />
+        {% else %}
+Image with size 800x500 not found.
+        {% endif %}
+    </div>
+    {% endif %}
+{% endfor %}
+
+
+
+</div>
+</div>
+
+<div class="slider-thumbs-n-text">
+
+<div class="slider-nav">
+{% for ge in galleryelements %}
+    <div>
+        {% if ge.element.type == "video" %}
+            <div class="video-thumb">
+                <img src="{{ ge.element.thumbnail_image_url }}" />
+            </div>
+        {% else %}
+            {% if ge.element|has_size:"160x100" %}
+                <img src="{% get_image_url_from_size ge.element.id "160x100" %}" />
+            {% elif ge.element.thumbnail_image_url %}
+                <img src="{{ ge.element.thumbnail_image_url }}" />
+            {% endif %}
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+
+<div class="slider-captions">
+{% for ge in galleryelements %}
+    <div>
+    {% if ge.description %}
+        <p>{{ge.description}}</p>
+    {% endif %}
+    {% if ge.credit %}
+        <p><small>{{ge.credit}}</small></p>
+    {% endif %}
+    </div>
+
+{% endfor %}
+</div>
+
+</div>
+
+</section>
+

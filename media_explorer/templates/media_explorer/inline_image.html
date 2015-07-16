@@ -1,0 +1,8 @@
+{% load media_explorer_tags %}
+
+<figure class="">
+<img src="{% get_image_url_from_size image.id "800x500" "orig_c"|safe %}" alt="">
+{% if image.caption or image.credit  %}
+    <figcaption>{{image.caption}} {{image.credit}}</figcaption>
+{% endif %}
+</figure>

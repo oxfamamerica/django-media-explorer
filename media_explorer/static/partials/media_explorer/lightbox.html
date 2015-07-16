@@ -1,0 +1,31 @@
+<div class="modal-body" ng-swipe-left="Lightbox.nextImage()" ng-swipe-right="Lightbox.prevImage()">
+	<div class="lightbox-nav">
+		<button class="close" aria-hidden="true" ng-click="$dismiss()"><i class="fa fa-times"></i></button>
+
+		<div class="btn-group">
+			<div class="previous" ng-click="Lightbox.prevImage()">
+				<i class="fa fa-chevron-left fa-5x"></i>
+			</div>
+			<div class="next" ng-click="Lightbox.nextImage()">
+				<i class="fa fa-chevron-right fa-5x"></i>
+			</div>
+		</div>
+	</div>
+
+	<div class="content-wrapper">
+		<div class="lightbox-image-container content-container" ng-hide="Lightbox.videoEmbed">
+			<img lightbox-src="{{Lightbox.imageUrl}}" alt="">
+			<div class="lightbox-image-caption" ng-show="Lightbox.imageCaption">
+				<span>{{Lightbox.imageCaption}}</span>
+			</div>
+		</div>
+
+		<div class="lightbox-video-container content-container" ng-show="Lightbox.videoEmbed">
+			<div ng-bind-html="Lightbox.videoEmbed | unsafe"></div>
+			<div class="lightbox-image-caption" ng-show="Lightbox.imageCaption">
+				<span>{{Lightbox.imageCaption}}</span>
+			</div>
+		</div>	
+		
+	</div>
+</div>

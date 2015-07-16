@@ -1,0 +1,17 @@
+.pagination-controls{
+	width: 100%;
+	margin-top: $general-margin;
+	text-align: center;
+	.pagination-wrapper{
+		.btn, .page-count{
+			display: inline-block;
+			width: $pagination-button-width;
+			font-size: $general-font-size;
+			text-align: center;
+		}
+
+		.page-count{
+			width: $pagination-page-count-width;
+		}
+	}
+}

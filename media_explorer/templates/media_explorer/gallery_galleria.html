@@ -1,0 +1,103 @@
+{% load media_explorer_tags %}
+<link rel="stylesheet" type="text/css" href="/static/js/vendor/galleria/themes/classic/galleria.classic.css">
+<script type="text/javascript" src="/static/js/vendor/galleria/galleria-1.4.2.js"></script>
+<script type="text/javascript" src="/static/js/vendor/galleria/themes/classic/galleria.classic.js"></script>
+<section class="cmpnt cmpnt-border media-gallery">
+
+	<div class="galleria"></div>
+</section>
+
+<style>
+	.galleria{ 
+		width: 100%; 
+	}
+	
+	.galleria-theme-classic{
+		background: #D9D6C5;
+	}
+	
+	.galleria-stage{
+		background-color: black;
+	}
+	
+	.galleria-theme-classic .galleria-info{
+		bottom: 0;
+		width: 100%;
+		left: 0;
+		top: auto;
+	}
+	
+	.galleria-theme-classic .galleria-info-text{
+		background-color: rgba(55,55,55,0.7);
+		width: 100%;
+		position: absolute;
+		bottom: 0;
+	}
+
+	.galleria-theme-classic .galleria-info-link{
+		bottom: 10px;
+		right: 10px;
+	}
+
+	.galleria-theme-classic .galleria-info-close{
+		bottom: 20px;
+		right: 10px;
+		top: auto;
+	}
+
+	.galleria-theme-classic .galleria-info-description{
+		font-family: Arial, sans-serif;
+		font-style: normal;
+	}
+
+	.galleria-counter{
+		top: 10px;
+	}
+</style>
+<script>
+	
+
+	var resizing = function(){
+		$('.galleria').height($('.galleria').width() * .7);
+	}
+	
+	resizing();
+
+	window.onresize = function(){
+		resizing();
+	}
+
+	var data = [
+		{% for ge in galleryelements %}
+			{
+			{% if ge.element.type == "video" %}
+				video: "{{ge.element.video_url}}",
+				title: "{{ge.description|escapejs}}",
+				{% if ge.credit %}
+				description: "{{ge.credit}}",
+				{% endif %}
+				thumb: "{{ge.element.thumbnail_image_url}}"
+			{% else %}
+				image: "{% get_image_url_from_size ge.element.id "800x500" %}",
+				{% if ge.description %}
+				title: "{{ge.description|escapejs}}",
+				{% endif %}
+				{% if ge.credit %}
+				description: "{{ge.credit|escapejs}}",
+				{% endif %}
+				thumb: "{{ge.element.thumbnail_image_url}}"
+			{% endif %}
+			},
+		{% endfor %}
+	];
+
+
+	$(".galleria").galleria({
+		dataSource: data
+	});
+
+	$('.galleria-theme-classic .galleria-info').detach().appendTo('.galleria-theme-classic .galleria-stage');
+	$('.galleria-theme-classic .galleria-info-close').detach().appendTo('.galleria-theme-classic .galleria-info-text');
+	$('.galleria-theme-classic .galleria-info-link').click();
+</script>
+<!-- END MEDIA GALLERY -->

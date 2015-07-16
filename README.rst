@@ -11,11 +11,16 @@ create slideshows.
 -  `How it works`_
 -  `Demo`_
 -  `Contributing`_
+-  `Credits`_
 
 Dependencies
 ============
 
 This version is strictly limited to Django 1.6.11 and below.
+
+Other dependencies are: - `Django Rest Framework`_ (version 2.4.4) -
+`Micawber`_ (version 0.3.2) - `Pillow`_ (version 2.6.1) - `CKEditor`_
+(version 4.4.8)
 
 Installation
 ============
@@ -26,8 +31,9 @@ Run this command:
 
     pip install django-media-explorer
 
-NOTE: If you do not use the above method to install this application
-then you will need to install these additional dependencies.
+NOTE 1: If you do not use the above method to install this application
+(for instnace if you install from the Git repo) then you will need to
+install these additional dependencies.
 
 ::
 
@@ -35,6 +41,26 @@ then you will need to install these additional dependencies.
     pip install djangorestframework==2.4.4
     pip install Pillow==2.6.1
     pip install django-ckeditor==4.4.8
+
+NOTE 2: If you want to use a virtual environment then run the following
+commands:
+
+::
+
+    virtualenv dme
+    cd dme
+    source bin/activate
+    pip install django-media-explorer
+
+NOTE 3: Pillow has some platform requirements. For instance if you are
+on Centos then run these commands before you install.
+
+::
+
+    sudo yum install "Development Tools"
+    sudo yum install python-devel
+    sudo yum install libjpeg-devel
+    sudo yum install zlib-devel
 
 Add these to your INSTALLED\_APPS settings
 
@@ -62,72 +88,152 @@ Create a file in the same folder as your **settings.py** file and name
 it **media\_explorer\_settings.py** and then copy and paste the
 following code into **media\_explorer\_settings.py**.
 
-\`\`\`
+::
 
-import os
 
-Comment this if you have already set it
-=======================================
+    import os
 
-PROJECT\_ROOT = os.path.dirname(os.path.abspath(\ **file**))
+    # Comment this if you have already set it
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-Comment this if you have already set it
-=======================================
+    # Comment this if you have already set it
+    STATIC_URL = "/static/"
 
-STATIC\_URL = ./static/.
+    # Comment this if you have already set it
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
 
-Comment this if you have already set it
-=======================================
+    # Comment this if you have already set it
+    MEDIA_URL = STATIC_URL + "media/"
 
-STATIC\_ROOT = os.path.join(PROJECT\_ROOT, STATIC\_URL.strip(./.))
+    # Comment this if you have already set it
+    MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
 
-Comment this if you have already set it
-=======================================
+    DME_RESIZE = True
 
-MEDIA\_URL = STATIC\_URL + .media/.
+    DME_VIDEO_THUMBNAIL_DEFAULT_URL = "/static/img/default_video.gif"
+    DME_GALLERY_THUMBNAIL_DEFAULT_URL = "/static/img/default_gallery.gif"
 
-Comment this if you have already set it
-=======================================
+    #This will be appended to settings.MEDIA_URL
+    DME_RESIZE_DIRECTORY = "resized"
 
-MEDIA\_ROOT = os.path.join(PROJECT\_ROOT,
-\*MEDIA\_URL.strip(./.).split(./.))
+    DME_RESIZE_HORIZONTAL_ASPECT_RATIO = "8:5"
+    DME_RESIZE_VERTICAL_ASPECT_RATIO = "320:414"
 
-DME\_RESIZE = True
+    DME_RESIZE_WIDTHS = {
+        "horizontal": [2440,1220,840,800,610,420,160],
+        "vertical": [556,320,278,160],
+        "non_cropped": [2440,1220,610,160],
+        "retina_2x": [1220,610,420,278,160],
+        "thumbnail": 200,
+    }
 
-DME\_VIDEO\_THUMBNAIL\_DEFAULT\_URL = ./static/img/default\_video.gif.
-DME\_GALLERY\_THUMBNAIL\_DEFAULT\_URL =
-./static/img/default\_gallery.gif.
+    DME_PAGE_SIZE = 50
 
-This will be appended to settings.MEDIA\_URL
-============================================
+    REST_FRAMEWORK = {
+        # Use Django's standard `django.contrib.auth` permissions,
+        # or allow read-only access for unauthenticated users.
+        'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        ],
+        'DATETIME_FORMAT': "%Y-%m-%d %T",
+    }
 
-DME\_RESIZE\_DIRECTORY = .resized.
+    CKEDITOR_JQUERY_URL = "http://code.jquery.com/jquery-1.11.2.min.js"
 
-DME\_RESIZE\_HORIZONTAL\_ASPECT\_RATIO = .8:5.
-DME\_RESIZE\_VERTICAL\_ASPECT\_RATIO = .320:414.
+    CKEDITOR_UPLOAD_PATH = "uploads/"
 
-DME\_RESIZE\_WIDTHS = { .horizontal.: [2440,1220,840,800,610,420,160],
-.vertical.: [556,320,278,160], .non\_cropped.: [2440,1220,610,160],
-.retina\_2x.: [1220,610,420,278,160], .thumbnail.: 200, }
+    CKEDITOR_CONFIGS = {
+        'default': {
+            'extraPlugins': 'media_explorer',
+            'toolbar': 'Custom',
+            'toolbar_Custom': [
+                ['Bold', 'Italic', 'Underline'],
+                ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                ['Link', 'Unlink'],
+                ['RemoveFormat', 'Source'],
+                ['MediaExplorer']
+            ]
+        }
+    }
 
-DME\_PAGE\_SIZE = 50
+Set **DME\_RESIZE = False** if you do not want your images resized.
 
-REST\_FRAMEWORK = { # Use Django.s standard ``django.contrib.auth``
-permissions, # or allow read-only access for unauthenticated users.
-.DEFAULT\_PERMISSION\_CLASSES.: [
-.rest\_framework.permissions.DjangoModelPermissionsOrAnonReadOnly., ],
-.DATETIME\_FORMAT.: .%Y-%m-%d %T., }
+Now import the **media\_explorer\_settings.py** file into your
+**settings.py** file by adding this to the bottom of your
+**settings.py** file.
 
-CKEDITOR\_JQUERY\_URL = .http://code.jquery.com/jquery-1.11.2.min.js.
+::
 
-CKEDITOR\_UPLOAD\_PATH = .uploads/.
+    try:
+        from media_explorer_settings import *
+    except ImportError:
+        pass
 
-CKEDITOR\_CONFIGS = { .default.: { .extraPlugins.: .media\_explorer.,
-.toolbar.: .Custom., .toolbar\_Custom.: [ [.Bold., .Italic.,
-.Underline.], [.NumberedList., .BulletedList., .-., .Outdent., .Indent.,
-.-., .JustifyLeft., .JustifyCenter., .Justify
+How it works
+============
+
+Read the examples to see how you can implement it in your apps.
+
+https://github.com/oxfamamerica/media\_explorer\_example/
+
+Template tags
+-------------
+
+After you implement it in your apps you can display the media in your
+templates by using the following templatetags.
+
+::
+
+    {% get_video element_id %}
+
+::
+
+    {% get_media_gallery element_id %}
+
+::
+
+    {% get_image_url_from_size element_id element_typ "1220x763" "orig_c"|safe %}
+
+::
+
+    {% if story.content %}{{ story.content | show_short_code | safe }}{% endif %}
+
+Demo
+====
+
+Go to http://demos.oxfamamerica.org for a demo on this application.
+
+TODO
+====
+
+-  Add capability to save to AWS S3/Azzure etc.
+-  Upgrade to latest Django version
+
+Contributing
+============
+
+Report a bug or request a feature by opening an issue here:
+https://github.com/oxfamamerica/django-media-explorer/issues
+
+You can contribute to the project by coding bug fixes and adding
+features. To do so first fork the project, add your code to your project
+and then submit a pull request. Your name will be added to the
+`authors`_ list if your code gets pulled in.
+
+Credits
+=======
+
+Thank you to all the code `authors`_ and to the Oxfam America Creative
+and Web teams for donating the initial code, assets, testing and fixing
+bugs.
 
 .. _Dependencies: #dependencies
 .. _Installation: #installation
 .. _How it works: #how-it-works
 .. _Demo: #demo
+.. _Contributing: #contributing
+.. _Credits: #credits
+.. _Django Rest Framework: http://www.django-rest-framework.org/
+.. _Micawber: https://github.com/coleifer/micawber
+.. _Pillow: https://github.com/python-pillow/Pillow
+.. _CKEditor: https://github.com/ckeditor

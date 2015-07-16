@@ -16,9 +16,13 @@ A Django application to manage your images, video links, embeds and create slide
 This version is strictly limited to Django 1.6.11 and below.
 
 Other dependencies are:
+
 [Micawber](https://github.com/coleifer/micawber) (version 0.3.2)
+
 [Django Rest Framework](http://www.django-rest-framework.org/) (version 2.4.4)
+
 [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
+
 [CKEditor](https://github.com/ckeditor) (version 4.4.8)
 
 #Installation

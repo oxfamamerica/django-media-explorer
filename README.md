@@ -23,7 +23,7 @@ Run this command:
 pip install django-media-explorer
 ```
 
-NOTE 1: If you do not use the above method to install this application then you will need to install these additional dependencies.
+NOTE 1: If you do not use the above method to install this application (for instnace if you install from the Git repo) then you will need to install these additional dependencies.
 
 ```
 pip install micawber==0.3.2
@@ -41,7 +41,7 @@ source bin/activate
 pip install django-media-explorer
 ```
 
-NOTE 3: Pillow has some platform requirements. For instance if you are Centos run these commands before you install.
+NOTE 3: Pillow has some platform requirements. For instance if you are on Centos then run these commands before you install.
 
 ```
 sudo yum install "Development Tools"
@@ -153,11 +153,6 @@ try:
     from media_explorer_settings import *
 except ImportError:
     pass
-```
-
-Add the following javascript includes to your admin/base.html file.
-
-```
 ```
 
 #How it works

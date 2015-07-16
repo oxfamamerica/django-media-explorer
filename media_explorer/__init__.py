@@ -9,6 +9,6 @@
 
 __title__ = 'Django Media Explorer'
 __version__ = '0.1.2'
-__author__ = 'Kofi Bosque-Hamilton (@kofic)'
+__author__ = 'Kofi Bosque-Hamilton (koficharlie@gmail.com)'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2015 OxfamAmerica'
+__copyright__ = 'Copyright 2015 Oxfam America'

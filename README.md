@@ -9,6 +9,7 @@ A Django application to manage your images, video links, embeds and create slide
 - [How it works](#how-it-works)
 - [Demo](#demo)
 - [Contributing](#contributing)
+- [Credits](#credits)
     
 #Dependencies
 
@@ -22,13 +23,31 @@ Run this command:
 pip install django-media-explorer
 ```
 
-NOTE: If you do not use the above method to install this application then you will need to install these additional dependencies.
+NOTE 1: If you do not use the above method to install this application then you will need to install these additional dependencies.
 
 ```
 pip install micawber==0.3.2
 pip install djangorestframework==2.4.4
 pip install Pillow==2.6.1
 pip install django-ckeditor==4.4.8
+```
+
+NOTE 2: If you want to use a virtual environment then run the following commands:
+
+```
+virtualenv dme
+cd dme
+source bin/activate
+pip install django-media-explorer
+```
+
+NOTE 3: Pillow has some platform requirements. For instance if you are Centos run these commands before you install.
+
+```
+sudo yum install "Development Tools"
+sudo yum install python-devel
+sudo yum install libjpeg-devel
+sudo yum install zlib-devel
 ```
 
 Add these to your INSTALLED_APPS settings
@@ -183,3 +202,6 @@ https://github.com/oxfamamerica/django-media-explorer/issues
 
 You can contribute to the project by coding bug fixes and adding features. To do so first fork the project, add your code to your project and then submit a pull request.
 
+#Credits
+
+Thank you to all the code [authors](https://github.com/oxfamamerica/django-media-explorer/issues) and to the Oxfam America Creative and Web teams for adding code, assets, testing and fixing bugs.

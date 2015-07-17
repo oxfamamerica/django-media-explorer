@@ -200,8 +200,7 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 Report a bug or request a feature by opening an issue here:
 https://github.com/oxfamamerica/django-media-explorer/issues
 
-
-You can contribute to the project by coding bug fixes and adding features. To do so first fork the project, add your code to your project and then submit a pull request. Your name will be added to the [authors](https://github.com/oxfamamerica/django-media-explorer/blob/master/AUTHORS) list if your code gets pulled in.
+You can contribute to the project by coding bug fixes and adding features. To do so first fork the project, add your code to your fork and then submit a pull request. Remember to add your name in your forked version of the AUTHORS file. Your name will show in the [authors](https://github.com/oxfamamerica/django-media-explorer/blob/master/AUTHORS) list if your code gets pulled in.
 
 #Credits
 

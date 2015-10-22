@@ -31,9 +31,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'django<1.7',
+        'django>=1.7',
         'micawber==0.3.2',
-        'djangorestframework==2.4.4',
+        'djangorestframework==3.0.0',
         'Pillow==2.6.1',
         'django-ckeditor==4.4.8',
     ],

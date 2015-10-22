@@ -4,38 +4,19 @@ A Django application to manage your images, video links, embeds and create slide
 
 **Table of Contents**
 
-- [Screen shots](#screen-shots)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [How it works](#how-it-works)
 - [Demo](#demo)
 - [Contributing](#contributing)
 - [Credits](#credits)
-
-#Screen shots
-
-[Images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)
-
-[Add images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images-add.jpg)
-
-[Videos](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos.jpg)
-
-[Add video](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos-add.jpg)
-
-[Gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery.jpg)
-
-[Add gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-add.jpg)
-
-[Edit gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-edit.jpg)
     
 #Dependencies
 
-This version is for Django 1.7+ 
-
-[Go here](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.1.md) for Django 1.6.11 and below documentation.
+This version is strictly limited to Django 1.6.11 and below.
 
 Other dependencies are:
-- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0)
+- [Django Rest Framework](http://www.django-rest-framework.org/) (version 2.4.4)
 - [Micawber](https://github.com/coleifer/micawber) (version 0.3.2)
 - [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
 - [CKEditor](https://github.com/ckeditor) (version 4.4.8)
@@ -48,11 +29,11 @@ Run this command:
 pip install django-media-explorer
 ```
 
-NOTE 1: If you do not use the above method to install this application (for instance if you install from the Git repo) then you will need to install these additional dependencies.
+NOTE 1: If you do not use the above method to install this application (for instnace if you install from the Git repo) then you will need to install these additional dependencies.
 
 ```
 pip install micawber==0.3.2
-pip install djangorestframework==3.0.0
+pip install djangorestframework==2.4.4
 pip install Pillow==2.6.1
 pip install django-ckeditor==4.4.8
 ```

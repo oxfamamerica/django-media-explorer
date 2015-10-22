@@ -1,4 +1,5 @@
 from django.http import Http404
+import traceback
 from media_explorer.models import Element, Gallery, GalleryElement, ResizedImage
 from rest_framework import generics, serializers, viewsets
 from rest_framework import views, response, status, parsers
@@ -9,6 +10,13 @@ class ElementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Element
         fields = ('id','name','file_name','type','credit','description','thumbnail_image_url','image_url','video_url','video_embed','created_at')
+
+    def update(self, instance, validated_data):
+        for field in validated_data:
+            if validated_data[field]:
+                setattr(instance,field,validated_data[field])
+        instance.save()
+        return instance
 
 class ElementList(views.APIView):
     """
@@ -120,39 +128,38 @@ class ElementDetail(views.APIView):
         return response.Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        element = self.get_object(pk)
-        serializer = ElementSerializer(element, data=request.DATA)
-        if serializer.is_valid():
-            serializer.save()
 
-            element = Element.objects.get(id=serializer.data["id"])
-            if request.FILES:
-                if "image" in request.FILES:
-                    #element = Element(image=request.FILES['image'])
-                    element.image = request.FILES['image']
+        try:
 
-                if "thumbnail_image" in request.FILES:
-                    #element = Element(thumbnail_image=request.FILES['thumbnail_image'])
-                    element.thumbnail_image = request.FILES['thumbnail_image']
+            element = self.get_object(pk)
+            serializer = ElementSerializer(element, data=request.DATA)
+            if serializer.is_valid():
+                serializer.save()
 
-                element.save()
+                element = Element.objects.get(id=serializer.data["id"])
+                if request.FILES:
+                    if "image" in request.FILES:
+                        #element = Element(image=request.FILES['image'])
+                        element.image = request.FILES['image']
 
-            serializer = ElementSerializer(element)
-            return response.Response(serializer.data)
+                    if "thumbnail_image" in request.FILES:
+                        #element = Element(thumbnail_image=request.FILES['thumbnail_image'])
+                        element.thumbnail_image = request.FILES['thumbnail_image']
 
-        return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    element.save()
+
+                serializer = ElementSerializer(element)
+                return response.Response(serializer.data)
+
+            return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+          print traceback.format_exc()
 
     def delete(self, request, pk, format=None):
         element = self.get_object(pk)
         element.delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
-
-    #DEBUG WARNING - tried to use this to fix Mezzanine looking for response.content-type
-    #def finalize_response(self, request, *args, **kwargs):
-    #    response = super(ElementDetail, self).finalize_response(request, *args, **kwargs)
-    #    response['content-type'] = 'not-your-business'
-    #    response['Content-Type'] = 'not-your-business'
-    #    return response
 
 class ResizedImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -180,23 +187,23 @@ class ResizedImageList(views.APIView):
         return response.Response(serializer.data)
 
 class GalleryElementSerializer(serializers.ModelSerializer):
-    id = serializers.Field(source='element.id')
-    type = serializers.Field(source='element.type')
-    name = serializers.Field(source='element.name')
-    #credit = serializers.Field(source='element.credit')
-    #description = serializers.Field(source='element.description')
-    thumbnail_image_url = serializers.Field(source='element.thumbnail_image_url')
-    image_url = serializers.Field(source='element.image_url')
-    video_url = serializers.Field(source='element.video_url')
-    video_embed = serializers.Field(source='element.video_embed')
-    created_at = serializers.Field(source='element.created_at')
+    id = serializers.ReadOnlyField(source='element.id')
+    type = serializers.ReadOnlyField(source='element.type')
+    name = serializers.ReadOnlyField(source='element.name')
+    #credit = serializers.ReadOnlyField(source='element.credit')
+    #description = serializers.ReadOnlyField(source='element.description')
+    thumbnail_image_url = serializers.ReadOnlyField(source='element.thumbnail_image_url')
+    image_url = serializers.ReadOnlyField(source='element.image_url')
+    video_url = serializers.ReadOnlyField(source='element.video_url')
+    video_embed = serializers.ReadOnlyField(source='element.video_embed')
+    created_at = serializers.ReadOnlyField(source='element.created_at')
 
     class Meta:
         model = GalleryElement
         fields = ('id','type','name','credit','description','thumbnail_image_url','image_url','video_url','video_embed','sort_by','created_at')
 
 class GallerySerializer(serializers.ModelSerializer):
-    elements = GalleryElementSerializer(source='galleryelement_set', many=True, required=False)
+    elements = GalleryElementSerializer(source='galleryelement_set', many=True, required=False, read_only=True)
     class Meta:
         model = Gallery
         fields = ('id','name','description','thumbnail_image_url','elements','created_at')
@@ -303,7 +310,6 @@ class GalleryList(views.APIView):
 
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#kofi
 class GalleryDetail(views.APIView):
     """
     Retrieve, update or delete a gallery instance
@@ -382,13 +388,6 @@ class GalleryDetail(views.APIView):
         element.delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
-    #DEBUG WARNING - tried to use this to fix Mezzanine looking for response.content-type
-    #def finalize_response(self, request, *args, **kwargs):
-    #    response = super(GalleryDetail, self).finalize_response(request, *args, **kwargs)
-    #    response['content-type'] = 'not-your-business'
-    #    response['Content-Type'] = 'not-your-business'
-    #    return response
-
 class GalleryElementDetail(views.APIView):
     """
     Retrieve, update or delete an element instance
@@ -418,11 +417,4 @@ class GalleryElementDetail(views.APIView):
         element = self.get_object(pk)
         element.delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
-
-    #DEBUG WARNING - tried to use this to fix Mezzanine looking for response.content-type
-    #def finalize_response(self, request, *args, **kwargs):
-    #    response = super(GalleryElementDetail, self).finalize_response(request, *args, **kwargs)
-    #    response['content-type'] = 'not-your-business'
-    #    response['Content-Type'] = 'not-your-business'
-    #    return response
 

@@ -30,7 +30,7 @@ A Django application to manage your images, video links, embeds and create slide
     
 #Dependencies
 
-This version is for Django 1.7+ 
+This version (0.2+) is for Django 1.7+ 
 
 [Go here](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.1.md) for Django 1.6.11 and below documentation.
 

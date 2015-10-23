@@ -13,7 +13,7 @@ A Django application to manage your images, video links, embeds and create slide
     
 #Dependencies
 
-This version is strictly limited to Django 1.6.11 and below.
+Any version less than 0.2 (<0.2) is strictly limited to Django 1.6.11 and below.
 
 Other dependencies are:
 - [Django Rest Framework](http://www.django-rest-framework.org/) (version 2.4.4)

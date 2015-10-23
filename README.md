@@ -14,19 +14,13 @@ A Django application to manage your images, video links, embeds and create slide
 
 #Screen shots
 
-[Images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)
-
-[Add images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images-add.jpg)
-
-[Videos](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos.jpg)
-
-[Add video](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos-add.jpg)
-
-[Gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery.jpg)
-
-[Add gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-add.jpg)
-
-[Edit gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-edit.jpg)
+- [Images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)
+- [Add images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images-add.jpg)
+- [Videos](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos.jpg)
+- [Add video](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos-add.jpg)
+- [Gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery.jpg)
+- [Add gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-add.jpg)
+- [Edit gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-edit.jpg)
     
 #Dependencies
 
@@ -212,7 +206,7 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 
 #TODO
 - Add capability to save to AWS S3/Azzure etc.
-- Upgrade to latest Django version
+- ~~Upgrade to latest Django version~~
 
 #Contributing
 

@@ -219,3 +219,4 @@ You can contribute to the project by coding bug fixes and adding features. To do
 #Credits
 
 Thank you to all the code [authors](https://github.com/oxfamamerica/django-media-explorer/blob/master/AUTHORS) and to the Oxfam America Creative, Content and Web teams for donating the initial code, assets, testing and fixing bugs.
+ 

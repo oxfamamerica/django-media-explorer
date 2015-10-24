@@ -26,7 +26,7 @@ Other dependencies are:
 Run this command:
 
 ```
-pip install django-media-explorer
+pip install django-media-explorer==0.1.2
 ```
 
 NOTE 1: If you do not use the above method to install this application (for instnace if you install from the Git repo) then you will need to install these additional dependencies.

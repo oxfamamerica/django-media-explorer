@@ -207,6 +207,15 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 #TODO
 - Add capability to save to AWS S3/Azzure etc.
 - ~~Upgrade to latest Django version~~
+- Simplify form setup by implementing DME as Django fields.
+- Provide API so other applications can add media programmatically to DME.
+- Provide tests for DME
+
+#CHANGELOG
+
+##v0.2.0
+You can now use DME with Django 1.7+
+
 
 #Contributing
 

@@ -211,6 +211,12 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 - Provide API so other applications can add media programmatically to DME.
 - Provide tests for DME
 
+#CHANGELOG
+
+##v0.2.0
+You can now use DME with Django 1.7+
+
+
 #Contributing
 
 Report a bug or request a feature by opening an issue here:

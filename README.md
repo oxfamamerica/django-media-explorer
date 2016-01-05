@@ -213,6 +213,8 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 
 #CHANGELOG
 
+##v0.3.0
+
 ##v0.2.0
 You can now use DME with Django 1.7+
 

@@ -138,7 +138,7 @@ class Blog(models.Model):
     entry = RichTextField()
 ```
 
-After you add media fields to your model you can add data via the admin page ([See screenshot](https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png))
+After you add media fields to your model you can add data via the admin page ([See screenshot](https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png) - the button on the extreme right in the WYSIWYG is the DME plugin button. It will allow you to insert media elements into your entry.)
 
 You can also add data programatically like this.
 

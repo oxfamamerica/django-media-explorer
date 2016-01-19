@@ -81,13 +81,13 @@ python manage.py migrate
 
 #Tests
 
-Run these commands to run the DME tests.
+Run this command to run all the DME tests.
 
 ```
 python manage.py test media_explorer.tests
 ```
 
-Or you can run the tests in sections.
+Or you can run the tests individually.
 
 ```
 python manage.py test media_explorer.tests.elements.tests

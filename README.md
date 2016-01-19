@@ -6,7 +6,7 @@ A Django application to manage your images, video links, embeds and create slide
 
 - [Installation](#installation)
 - [How it works](#how-it-works)
-- [Demo](#demo)
+- [Tests](#tests)
 - [Contributing](#contributing)
 - [Credits](#credits)
 
@@ -29,7 +29,7 @@ source bin/activate
 pip install django-media-explorer
 ```
 
-NOTE 2: Pillow has some platform requirements. For instance if you are on Centos then run these commands before you install.
+NOTE 2: DME is dependant on Pillow and Pillow in turn has some platform dependencies. For instance if you are on Centos then you may need to run these commands before you install.
 
 ```
 sudo yum install "Development Tools"
@@ -103,9 +103,23 @@ After you implement it in your apps you can display the media in your templates 
 {% if story.content %}{{ story.content | show_short_code | safe }}{% endif %}
 ```
 
-#Demo
+#Tests
 
-Go to http://demos.oxfamamerica.org for a demo on this application.
+Run these commands to run the DME tests.
+
+```
+python manage.py test media_explorer.tests
+```
+
+Or you can run the tests in sections.
+
+```
+python manage.py test media_explorer.tests.elements.tests
+python manage.py test media_explorer.tests.galleries.tests
+python manage.py test media_explorer.tests.customfields.tests
+```
+
+
 
 #TODO
 - Add capability to save to AWS S3/Azzure etc.

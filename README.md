@@ -134,11 +134,9 @@ class Blog(models.Model):
     #Entry is changed from TextField to RichTextField
     #You will see a CKEditor WYSIWYG with DME plugin
     #NOTE: RichTextField will always allow blank fields
+    #NOTE 2: You cannot use more than one RichText field in a model
     entry = RichTextField()
 ```
-
-
-NOTE: You still cannot have many RichText fields on a page - you can still only have one RichText field.
 
 
 ##Template tags

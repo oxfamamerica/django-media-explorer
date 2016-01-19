@@ -138,7 +138,7 @@ class Blog(models.Model):
     entry = RichTextField()
 ```
 
-After you add media fields to your model you can add data programatically like this.
+After you add media fields to your model you can add data via the admin page or programatically like this.
 
 ```
 

@@ -133,6 +133,7 @@ class Blog(models.Model):
 
     #Entry is changed from TextField to RichTextField
     #You will see a CKEditor WYSIWYG with DME plugin
+    #NOTE: RichTextField will always allow blank fields
     entry = RichTextField()
 ```
 

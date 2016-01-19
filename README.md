@@ -138,10 +138,55 @@ class Blog(models.Model):
     entry = RichTextField()
 ```
 
+You can also add data programatically like this.
+
+```
+
+from media_explorer.models import Element, Gallery
+#Importing the Blog defined above
+from my_app.models import Blog
+
+#Create an image element
+
+
+#Create a video element
+
+
+#Create a gallery
+
+
+#Add media to blog
+
+```
+
+
+```
+{% load media_explorer_tags %}
+
+{% if blog.lead_media.type == "video" %}
+    {% get_video blog.lead_media.id %}
+{% elif blog.lead_media.type == "gallery" %}
+    {% get_media_gallery blog.lead_media.id %}
+{% elif blog.lead_media.type == "image" %}
+    <img src="{% get_image_url_from_size blog.lead_media.id "1220x763" "1220x762" "orig_c"|safe %}" alt="">
+    {% if blog.lead_media.caption or blog.lead_media.credit %}
+    <figcaption>
+        {% if blog.lead_media.caption %}
+            {{blog.lead_media.caption}}
+        {% endif %}
+        {% if blog.lead_media.credit %}
+            {{blog.lead_media.credit}}
+        {% endif %}
+    </figcaption>
+    {% endif %}
+{% endif %}
+
+{% get_video blog.video.id %}
+```
 
 ##Template tags
 
-After you implement it in your apps you can display the media in your templates by using the following templatetags.
+Here are all the available template tags.
 
 ```
 {% get_video element_id %}

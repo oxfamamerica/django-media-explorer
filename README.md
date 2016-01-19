@@ -182,8 +182,19 @@ ge2.element = video
 ge2.sort_by = 1
 ge2.save()
 
+#NOTE: If you go to your http://example.com/media_explorer link - you should see all the media you added above on the Media Explorer page.
+
 
 #Add media to blog
+blog = Blog()
+blog.title = "My first blog"
+blog.lead_media = gallery
+blog.video = video
+blog.save()
+
+#NOTE: This will fail because you set video field to type="video"
+blog.video = image
+blog.save()
 
 ```
 

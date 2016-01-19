@@ -128,7 +128,7 @@ class Blog(models.Model):
     #If you do not provide a type then media can be image/video/gallery
     lead_media = MediaField()
 
-    #Provide a specific type if you want to 
+    #Providing a type will restrict the element to this type
     video = MediaField(type="video")
 
     #Entry is changed from TextField to RichTextField

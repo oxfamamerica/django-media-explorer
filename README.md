@@ -5,8 +5,8 @@ A Django application to manage your images, video links, embeds and create slide
 **Table of Contents**
 
 - [Installation](#installation)
-- [How it works](#how-it-works)
 - [Tests](#tests)
+- [How it works](#how-it-works)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
 - [Credits](#credits)
@@ -79,6 +79,22 @@ python manage.py migrate
 ```
 
 
+#Tests
+
+Run these commands to run the DME tests.
+
+```
+python manage.py test media_explorer.tests
+```
+
+Or you can run the tests in sections.
+
+```
+python manage.py test media_explorer.tests.elements.tests
+python manage.py test media_explorer.tests.galleries.tests
+python manage.py test media_explorer.tests.customfields.tests
+```
+
 #How it works
 
 Read the examples to see how you can implement it in your apps. 
@@ -102,22 +118,6 @@ After you implement it in your apps you can display the media in your templates 
 
 ```
 {% if story.content %}{{ story.content | show_short_code | safe }}{% endif %}
-```
-
-#Tests
-
-Run these commands to run the DME tests.
-
-```
-python manage.py test media_explorer.tests
-```
-
-Or you can run the tests in sections.
-
-```
-python manage.py test media_explorer.tests.elements.tests
-python manage.py test media_explorer.tests.galleries.tests
-python manage.py test media_explorer.tests.customfields.tests
 ```
 
 

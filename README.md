@@ -8,6 +8,7 @@ A Django application to manage your images, video links, embeds and create slide
 - [Tests](#tests)
 - [How it works](#how-it-works)
 - [Changelog](#changelog)
+- [TODO](#todo)
 - [Contributing](#contributing)
 - [Credits](#credits)
 
@@ -122,12 +123,6 @@ After you implement it in your apps you can display the media in your templates 
 
 
 
-#TODO
-- Add capability to save to AWS S3/Azzure etc.
-- ~~Upgrade to latest Django version~~
-- ~~Simplify form setup by implementing DME as Django fields.~~
-- Make it possible to resize images dynamically the first time they are accessed in a templatetag.
-
 #CHANGELOG
 
 ##v0.3.0
@@ -141,6 +136,13 @@ You can now use DME with Django 1.7+
 
 ##v0.1.0
 [Documentation](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.1.md)
+
+#TODO
+- Add capability to save to AWS S3/Azzure etc.
+- ~~Upgrade to latest Django version~~
+- ~~Simplify form setup by implementing DME as Django fields.~~
+- Make it possible to resize images dynamically the first time they are accessed in a templatetag.
+
 
 #Contributing
 

@@ -112,7 +112,7 @@ class Blog(models.Model):
 
 ```
 
-You can now add media to your blogs by adding the MediaField and RichTextField fields.
+You can now add media to your blog by adding the MediaField and RichTextField fields.
 
 ```
 from django.db import models
@@ -125,8 +125,7 @@ class Blog(models.Model):
 
     title = models.CharField(max_length=150)
 
-    #If you do not provide a type then 
-    #lead media can take image/video/gallery
+    #If you do not provide a type then media can be image/video/gallery
     lead_media = MediaField()
 
     #Provide a specific type if you want to 

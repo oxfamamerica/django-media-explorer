@@ -7,6 +7,7 @@ A Django application to manage your images, video links, embeds and create slide
 - [Installation](#installation)
 - [How it works](#how-it-works)
 - [Tests](#tests)
+- [Changelog](#changelog)
 - [Contributing](#contributing)
 - [Credits](#credits)
 

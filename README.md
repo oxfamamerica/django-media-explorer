@@ -149,16 +149,38 @@ from django.core.files import File
 #Importing the Blog defined above
 from my_app.models import Blog
 
-#Create an image element
+#Read your local image into my_file
 my_file = open(path_to_local_image_file,"rb")
+
+#Create an image element
 image = Element()
 image.name = "My image"
 image.image.save(os.path.basename(my_file.name),File(my_file), save=True)
 
 #Create a video element
-
+video = Element()
+video.video_url = "https://www.youtube.com/watch?v=nBupSKjSQM0"
+video.save()
 
 #Create a gallery
+gallery = Gallery()
+gallery.name = "My gallery"
+gallery.save()
+
+#Add gallery elements
+ge = GalleryElement()
+ge.gallery = gallery
+ge.element = image
+ge.credit = "My image credit"
+ge.description = "My image caption"
+ge.sort_by = 0
+ge.save()
+
+ge2 = GalleryElement()
+ge2.gallery = gallery
+ge2.element = video
+ge2.sort_by = 1
+ge2.save()
 
 
 #Add media to blog

@@ -98,7 +98,29 @@ python manage.py test media_explorer.tests.customfields.tests
 
 #How it works
 
-Read the examples to see how you can implement it in your apps. 
+You can now create a media field simply by doing 
+
+```
+my_field = MediaField()
+
+#If you want to force the field to be of type image/video/gallery then do this
+
+my_field = MediaField(type="image")
+
+```
+
+NOTE: You are no longer restricted to one media field a model. You can have as many as you want.
+
+You can create a richtext field that allows you to insert media simply by doing this:
+
+```
+
+my_field = RichTextField()
+
+
+```
+
+NOTE: You still cannot have many RichText fields on a page - you can still only have one RichText field.
 
 
 ##Template tags
@@ -128,6 +150,8 @@ After you implement it in your apps you can display the media in your templates 
 ##v0.3.0
 
 - You can now use DME custom model fields (MediaField and RichTextField) in your models.
+- You could previously only use one media field on a page - now you can have as many media fields as you want.
+- When you select an image to insert into a richtext field, via the admin page, a list of the current image sizes are listed - so you no longer have to guess which size is available.
 
 ##v0.2.0
 You can now use DME with Django 1.7+

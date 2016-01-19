@@ -137,6 +137,7 @@ class Blog(models.Model):
     entry = RichTextField()
 ```
 
+
 NOTE: You still cannot have many RichText fields on a page - you can still only have one RichText field.
 
 

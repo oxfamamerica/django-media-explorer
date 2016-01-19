@@ -98,26 +98,43 @@ python manage.py test media_explorer.tests.customfields.tests
 
 #How it works
 
-You can now create a media field simply by doing 
-
+Let's say you have a blog model that looks like this:
 ```
-my_field = MediaField()
+from django.db import models
 
-#If you want to force the field to be of type image/video/gallery then do this
+class Blog(models.Model):
+    """
+    Example Blog model
+    """
+    title = models.CharField(max_length=150)
+    entry = models.TextField(blank=True,null=True)
 
-my_field = MediaField(type="image")
-
-```
-
-NOTE: You are no longer restricted to one media field a model. You can have as many as you want.
-
-You can create a richtext field that allows you to insert media simply by doing this:
 
 ```
 
-my_field = RichTextField()
+You can now add media to your blogs by adding the MediaField and RichTextField fields.
 
+```
+from django.db import models
+from media_explorer.fields import MediaField, RichTextField
 
+class Blog(models.Model):
+    """
+    Example Blog model
+    """
+
+    title = models.CharField(max_length=150)
+
+    #If you do not provide a type then 
+    #lead media can take image/video/gallery
+    lead_media = MediaField()
+
+    #Provide a specific type if you want to 
+    video = MediaField(type="video")
+
+    #Entry is changed from TextField to RichTextField
+    #You will see a CKEditor WYSIWYG with DME plugin
+    entry = RichTextField()
 ```
 
 NOTE: You still cannot have many RichText fields on a page - you can still only have one RichText field.

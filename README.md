@@ -142,12 +142,18 @@ You can also add data programatically like this.
 
 ```
 
+import os
 from media_explorer.models import Element, Gallery
+from django.core.files import File
+
 #Importing the Blog defined above
 from my_app.models import Blog
 
 #Create an image element
-
+my_file = open(path_to_local_image_file,"rb")
+image = Element()
+image.name = "My image"
+image.image.save(os.path.basename(my_file.name),File(my_file), save=True)
 
 #Create a video element
 
@@ -159,6 +165,7 @@ from my_app.models import Blog
 
 ```
 
+If you provide the blog object (defined above) to your page - then your template may look like this.
 
 ```
 {% load media_explorer_tags %}
@@ -182,29 +189,10 @@ from my_app.models import Blog
 {% endif %}
 
 {% get_video blog.video.id %}
-```
 
-##Template tags
-
-Here are all the available template tags.
+{% if blog.entry %}{{ blog.entry | show_short_code | safe }}{% endif %}
 
 ```
-{% get_video element_id %}
-```
-
-```
-{% get_media_gallery element_id %}
-```
-
-```
-{% get_image_url_from_size element_id element_typ "1220x763" "orig_c"|safe %}
-```
-
-```
-{% if story.content %}{{ story.content | show_short_code | safe }}{% endif %}
-```
-
-
 
 #CHANGELOG
 

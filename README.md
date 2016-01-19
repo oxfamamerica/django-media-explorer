@@ -1,40 +1,18 @@
-# Django Media Explorer
+# Django Media Explorer v0.3.0
 
 A Django application to manage your images, video links, embeds and create slideshows.
 
 **Table of Contents**
 
-- [Screen shots](#screen-shots)
-- [Dependencies](#dependencies)
 - [Installation](#installation)
 - [How it works](#how-it-works)
 - [Demo](#demo)
 - [Contributing](#contributing)
 - [Credits](#credits)
 
-#Screen shots
-
-- [Images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)
-- [Add images](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images-add.jpg)
-- [Videos](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos.jpg)
-- [Add video](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-videos-add.jpg)
-- [Gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery.jpg)
-- [Add gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-add.jpg)
-- [Edit gallery](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-gallery-edit.jpg)
-    
-#Dependencies
-
-This version (0.2+) is for Django 1.7+ 
-
-[Go here](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.1.md) for Django 1.6.11 and below documentation.
-
-Other dependencies are:
-- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0)
-- [Micawber](https://github.com/coleifer/micawber) (version 0.3.2)
-- [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
-- [CKEditor](https://github.com/ckeditor) (version 4.4.8)
-
 #Installation
+
+##Install
 
 Run this command:
 
@@ -42,16 +20,7 @@ Run this command:
 pip install django-media-explorer
 ```
 
-NOTE 1: If you do not use the above method to install this application (for instance if you install from the Git repo) then you will need to install these additional dependencies.
-
-```
-pip install micawber==0.3.2
-pip install djangorestframework==3.0.0
-pip install Pillow==2.6.1
-pip install django-ckeditor==4.4.8
-```
-
-NOTE 2: If you want to use a virtual environment then run the following commands:
+NOTE: If you want to use a virtual environment then run the following commands:
 
 ```
 virtualenv dme
@@ -60,7 +29,7 @@ source bin/activate
 pip install django-media-explorer
 ```
 
-NOTE 3: Pillow has some platform requirements. For instance if you are on Centos then run these commands before you install.
+NOTE 2: Pillow has some platform requirements. For instance if you are on Centos then run these commands before you install.
 
 ```
 sudo yum install "Development Tools"
@@ -68,6 +37,8 @@ sudo yum install python-devel
 sudo yum install libjpeg-devel
 sudo yum install zlib-devel
 ```
+
+##Update settings
 
 Add these to your INSTALLED_APPS settings
 
@@ -85,100 +56,32 @@ Add these to your urls.py
     ("^", include("media_explorer.urls")),
 ```
 
-Run the syncdb command to create all the database tables.
-
-```
-python manage.py syncdb
-```
-
-Create a file in the same folder as your **settings.py** file and name it **media_explorer_settings.py** and then copy and paste the following code into **media_explorer_settings.py**.
-
-```
-
-import os
-
-# Comment this if you have already set it
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-# Comment this if you have already set it
-STATIC_URL = "/static/"
-
-# Comment this if you have already set it
-STATIC_ROOT = os.path.join(PROJECT_ROOT, STATIC_URL.strip("/"))
-
-# Comment this if you have already set it
-MEDIA_URL = STATIC_URL + "media/"
-
-# Comment this if you have already set it
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, *MEDIA_URL.strip("/").split("/"))
-
-DME_RESIZE = True
-
-DME_VIDEO_THUMBNAIL_DEFAULT_URL = "/static/img/default_video.gif"
-DME_GALLERY_THUMBNAIL_DEFAULT_URL = "/static/img/default_gallery.gif"
-
-#This will be appended to settings.MEDIA_URL
-DME_RESIZE_DIRECTORY = "resized"
-
-DME_RESIZE_HORIZONTAL_ASPECT_RATIO = "8:5"
-DME_RESIZE_VERTICAL_ASPECT_RATIO = "320:414"
-
-DME_RESIZE_WIDTHS = {
-    "horizontal": [2440,1220,840,800,610,420,160],
-    "vertical": [556,320,278,160],
-    "non_cropped": [2440,1220,610,160],
-    "retina_2x": [1220,610,420,278,160],
-    "thumbnail": 200,
-}
-
-DME_PAGE_SIZE = 50
-
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ],
-    'DATETIME_FORMAT': "%Y-%m-%d %T",
-}
-
-CKEDITOR_JQUERY_URL = "http://code.jquery.com/jquery-1.11.2.min.js"
-
-CKEDITOR_UPLOAD_PATH = "uploads/"
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'extraPlugins': 'media_explorer',
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['RemoveFormat', 'Source'],
-            ['MediaExplorer']
-        ]
-    }
-}
-
-
-```
-
-Set **DME_RESIZE = False** if you do not want your images resized. 
-
-Now import the **media_explorer_settings.py** file into your **settings.py** file by adding this to the bottom of your **settings.py** file.
+Copy and paste this code into the bottom of your setting.py file.
 
 ```
 try:
-    from media_explorer_settings import *
+    from media_explorer.settings import *
 except ImportError:
     pass
+
 ```
+
+The DME application will try to resize your images during your upload. If you do not want to resize your images then set the setting **DME_RESIZE = False** somewhere in your settings.py file (after the "media_explorer.settings" import).
+
+##Create tables
+
+Run these migration commands to create your database tables.
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
 
 #How it works
 
 Read the examples to see how you can implement it in your apps. 
 
-https://github.com/oxfamamerica/media_explorer_example/
 
 ##Template tags
 
@@ -207,17 +110,22 @@ Go to http://demos.oxfamamerica.org for a demo on this application.
 #TODO
 - Add capability to save to AWS S3/Azzure etc.
 - ~~Upgrade to latest Django version~~
-- Simplify form setup by implementing DME as Django fields.
-- Provide API so other applications can add media programmatically to DME.
-- Provide tests for DME
+- ~~Simplify form setup by implementing DME as Django fields.~~
+- Make it possible to resize images dynamically the first time they are accessed in a templatetag.
 
 #CHANGELOG
 
 ##v0.3.0
 
+- You can now use DME custom model fields (MediaField and RichTextField) in your models.
+
 ##v0.2.0
 You can now use DME with Django 1.7+
 
+[Documentation](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.2.md)
+
+##v0.1.0
+[Documentation](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.1.md)
 
 #Contributing
 

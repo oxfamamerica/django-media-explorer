@@ -138,12 +138,12 @@ class Blog(models.Model):
     entry = RichTextField()
 ```
 
-You can also add data programatically like this.
+After you add media fields to your model you can add data programatically like this.
 
 ```
 
 import os
-from media_explorer.models import Element, Gallery
+from media_explorer.models import Element, Gallery, GalleryElement
 from django.core.files import File
 
 #Importing the Blog defined above

@@ -1,177 +1,178 @@
+function meInsertIntoEditor(html)
+{
+    //BUG NOTE
+    //Currently supporting only 1 RichText field per page
+    //If you have multiple RichText fields they will all be updated
+    for(var i in CKEDITOR.instances) {
+        var instance = CKEDITOR.instances[i];
+	    instance.insertHtml(html);
+    }
+}
+
 function meCKEditorCallback()
 {
 	var id = $("#meWYSIWYGDataMedia").val();
-	var url = $("#meWYSIWYGDataMediaUrl").val();
 	var type = $("#meWYSIWYGDataType").val();
-	var caption = $("#meWYSIWYGDataCaption").val();
-	var credit = $("#meWYSIWYGDataCredit").val();
+	var richtext_field_id = $("#meWYSIWYGDataRichTextFieldId").val();
 
 	var html = "[media-explorer-" + type + "-" + id + "]";
 
-    var style = "";
     if ( type == "image" )
     {
-        var preInsertPrompt = {
-            state0: {
-	            title: "Edit the image style, size, caption and credit",
-                html: '<label>Style:</label><br>'+
-                        '<select name="style">'+
-                        '<option value="">'+
-                        '<option value="cmpnt-full-article-main-img">Full width'+
-                        '<option value="img-inline-float-left">Float left'+
-                        '<option value="img-inline-float-right">Float right'+
-                        '</select>'+
-                        '<br>'+
-                        '<label>Size:</label><br>'+
-                        '<select name="size">'+
-                        '<option value="">'+
-                        '<option value="h_1220">Horizontal/square image with 1220px width'+
-                        '<option value="h_800">Horizontal/square image with 800px width'+
-                        '<option value="h_610">Horizontal/square image with 610px width'+
-                        '<option value="h_420">Horizontal/square image with 420px width'+
-                        '<option value="h_160">Horizontal/square image with 160px width'+
-                        '<option value="v_278">Vertical image with 278px width'+
-                        '<option value="v_160">Vertical image with 160px width'+
-                        '</select>'+
-                        '<br>'+
-                        '<label>Caption:</label><br>'+
-                        '<textarea style="width:95%" name="caption">'+caption+'</textarea>'+
-                        '<br>'+
-                        '<label>Credit:</label><br>'+
-                        '<textarea style="width:95%" name="credit">'+credit+'</textarea>'+
-                        '<br>',
-	            buttons: { "Insert image": true, "Cancel": false},
-	            submit: function(e,v,m,f){
-                    e.preventDefault();
-		            if ( !v ){ $.prompt.close(); return; }
-                    meCKEditorImageCallback(f.style,f.size,f.caption,f.credit);
-	            }
-            },
-            state1: {
-                title: "Image not found",
-                html: "Resized image was not found. Try again.",
-	            buttons: { "Try again": true, "Cancel": false},
-                focus: 0,
-	            submit: function(e,v,m,f){
-                    e.preventDefault();
-		            if ( !v ){ $.prompt.close(); return; }
-                    $.prompt.goToState('state0');
-	            }
-            }
-        };
-
-        $.prompt(preInsertPrompt);
-
-        return;
+        return meCKEditorGetResizedImages(id);
 	}
 
-	CKEDITOR.instances["id_content"].insertHtml(html);
+	//CKEDITOR.instances[richtext_field_id].insertHtml(html);
+	meInsertIntoEditor(html);
 }
 
-function meCKEditorImageCallback(style,size,caption,credit)
+function meCKEditorGetResizedImages(image_id)
 {
-	var id = $("#meWYSIWYGDataMedia").val();
+    var url = "/api/media/resizedimages/?element_id=" + image_id;
+    $.ajax({
+        url: url
+    }).done(function(data) {
+        return meCKEditorGetResizedImagesCallback(image_id, data);
+    });
+
+}
+
+function meCKEditorGetResizedImagesCallback(image_id, data)
+{
+	var caption = $("#meWYSIWYGDataCaption").val();
+	var credit = $("#meWYSIWYGDataCredit").val();
 	var url = $("#meWYSIWYGDataMediaUrl").val();
-	var type = $("#meWYSIWYGDataType").val();
-	//var caption = $("#meWYSIWYGDataCaption").val();
-	//var credit = $("#meWYSIWYGDataCredit").val();
 
-    if ( size )
+    var imageSelectHtml = '<input type="hidden" name="image_url" '
+    imageSelectHtml += 'value="' + url + '" ';
+    imageSelectHtml += '>'
+
+    if (data.length == 1)
     {
+        imageSelectHtml = '<input type="hidden" name="image_url" '
+        imageSelectHtml += 'value="' + data[0]["image_url"] + '" ';
+        imageSelectHtml += '>'
+    }
+    else if (data.length>1)
+    {
+        imageSelectHtml = '<label>Size:</label><br>';
+        imageSelectHtml += '<select name="image_url">';
+        imageSelectHtml += '<option value="">Select an image size';
 
-        var size_array = size.split("_");
-        if ( id > 0 && type == "image" )
+        for (var x=0;x < data.length;x++)
         {
-            var url2 = "/api/media/resizedimages/?element_id=" + id;
-            $.ajax({
-                url: url2
-            }).done(function(data) {
-                var url3 = "";
-                for (var x=0;x < data.length;x++)
-                {
-                    var obj = data[x];
-                    if (size_array[0] == "h" && obj.image_width >= obj.image_height)
-                    {
-                        //Horizonta images
-                        if ( obj.image_width == size_array[1] )
-                        {
-                            url3 = obj.image_url;
-                        }
-                    }
-                    else if (size_array[0] == "v" && obj.image_width < obj.image_height)
-                    {
-                        //Vertical images
-                        if ( obj.image_width == size_array[1] )
-                        {
-                            url3 = obj.image_url;
-                        }
-                    }
-                }
-                if ( url3 )
-                {
-                    return meShowCKEditorImage(type,url3,style,caption,credit);
-                }
-                else
-                {
-                    $.prompt.goToState('state1');
-                }
-            });
+            var obj = data[x];
+
+            imageSelectHtml += '<option value="';
+            imageSelectHtml += obj["image_url"];
+            imageSelectHtml += '">';
+            imageSelectHtml += obj["size"] ;
+            imageSelectHtml += ' (';
+            imageSelectHtml += obj["image_width"] ;
+            imageSelectHtml += 'x' + obj["image_height"] ;
+            imageSelectHtml += ' px)';
         }
+        imageSelectHtml += '</select><br>';
+
+    }
+
+    imageSelectHtml += '<input type="hidden" name="image_id" '
+    imageSelectHtml += 'value="' + image_id + '" ';
+    imageSelectHtml += '>'
+
+    var preInsertPrompt = {
+        state0: {
+            title: "Edit the image style, size, caption and credit",
+            html: '<label>Style:</label>'+
+                    '<br>'+
+                    '<select name="style">'+
+                    '<option value="">'+
+                    '<option value="img-inline-full-width">Full width'+
+                    '<option value="img-inline-float-left">Float left'+
+                    '<option value="img-inline-float-right">Float right'+
+                    '</select>'+
+                    '<br>'+
+                    imageSelectHtml +
+                    '<label>Caption:</label>'+
+                    '<br>'+
+                    '<textarea style="width:95%" name="caption">'+caption+'</textarea>'+
+                    '<br>'+
+                    '<label>Credit:</label>'+
+                    '<br>'+
+                    '<textarea style="width:95%" name="credit">'+credit+'</textarea>'+
+                    '<br>',
+            buttons: { "Insert image": true, "Cancel": false},
+            submit: function(e,v,m,f){
+                e.preventDefault();
+                if ( !v ){ $.prompt.close(); return; }
+                if ( !f.image_url ){ $.prompt.goToState('state1'); return; }
+                meShowCKEditorImage(f.image_url,f.style,f.caption,f.credit);
+            }
+        },
+        state1: {
+            title: "Select an image size",
+            html: "You are required to select an image size. Try again.",
+            buttons: { "Try again": true, "Cancel": false},
+            focus: 0,
+            submit: function(e,v,m,f){
+                e.preventDefault();
+                if ( !v ){ $.prompt.close(); return; }
+                $.prompt.goToState('state0');
+            }
+        }
+    };
+
+    $.prompt(preInsertPrompt);
+
+}
 
 
+function meShowCKEditorImage(url,style,caption,credit)
+{
+	var richtext_field_id = $("#meWYSIWYGDataRichTextFieldId").val();
+
+    var img = "<img src='";
+    img += url
+    img += "' ";
+    img += ">";
+
+    var html = "<figure ";
+    if ( style )
+    {
+        html += " class='" + style + "' ";
     }
     else
     {
-        return meShowCKEditorImage(type,url,style,caption,credit);
+        html += " class='img-inline-float-left' ";
     }
-}
-
-function meShowCKEditorImage(type,url,style,caption,credit)
-{
-    if ( type == "image" )
+    html += ">";
+    html += img;
+    if ( caption || credit  )
     {
-        var img = "<img src='";
-        img += url
-        img += "' ";
-        img += ">";
+        html += "<figcaption>";
+        html += caption;
+        if ( caption ){ html += " " + credit; }
+        else { html += credit; }
+    }
 
-        html = "<figure ";
-        if ( style )
-        {
-            html += " class='" + style + "' ";
-        }
-        else
-        {
-            //html += " class='cmpnt-full-article-main-img' ";
-            html += " class='img-inline-float-left' ";
-        }
-        html += ">";
-        html += img;
-        if ( caption || credit  )
-        {
-            html += "<figcaption>";
-            html += caption;
-            if ( caption ){ html += " " + credit; }
-            else { html += credit; }
-        }
-        html += "</figure>";
-	}
+    html += "</figure>";
 
-	CKEDITOR.instances["id_content"].insertHtml(html);
+	//CKEDITOR.instances[richtext_field_id].insertHtml(html);
+	meInsertIntoEditor(html);
     $.prompt.close();
 }
 
-
 $(function() {
 
-	var hidden_fields = "<input type='hidden' id='meWYSIWYGDataType' >";
-	hidden_fields += "<input type='hidden' id='meWYSIWYGDataMedia' >";
-	hidden_fields += "<input type='hidden' id='meWYSIWYGDataMediaUrl' >";
-	hidden_fields += "<input type='hidden' id='meWYSIWYGDataCaption' >";
-	hidden_fields += "<input type='hidden' id='meWYSIWYGDataCredit' >";
-	hidden_fields += "<input type='hidden' id='meWYSIWYGDataText' >";
+	if ( !$("#meWYSIWYGDataType").length ) {
+        var hidden_fields = "<input type='hidden' id='meWYSIWYGDataType' >";
+        hidden_fields += "<input type='hidden' id='meWYSIWYGDataMedia' >";
+        hidden_fields += "<input type='hidden' id='meWYSIWYGDataMediaUrl' >";
+        hidden_fields += "<input type='hidden' id='meWYSIWYGDataCaption' >";
+        hidden_fields += "<input type='hidden' id='meWYSIWYGDataCredit' >";
+        hidden_fields += "<input type='hidden' id='meWYSIWYGDataText' >";
 
-   //Initialize
-   $("body").append("<div id='hidden-data'>" + hidden_fields + "</div>");
+        $("body").append("<div id='hidden-data'>" + hidden_fields + "</div>");
+	}
 
 });

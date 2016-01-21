@@ -43,13 +43,14 @@ class ElementList(views.APIView):
         except Exception as e:
             pass
 
-        try:
-            filter_list = filter.split(" ")
-            or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0]) | Q(credit__icontains=filter_list[0])
-            for term in filter_list[1:]:
-                or_query.add((Q(name__icontains=term) | Q(description__icontains=term) | Q(credit__icontains=term)), or_query.connector)
-        except Exception as e:
-            pass
+        if filter:
+            try:
+                filter_list = filter.split(" ")
+                or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0]) | Q(credit__icontains=filter_list[0])
+                for term in filter_list[1:]:
+                    or_query.add((Q(name__icontains=term) | Q(description__icontains=term) | Q(credit__icontains=term)), or_query.connector)
+            except Exception as e:
+                pass
 
         if and_query:
             query = and_query
@@ -72,7 +73,6 @@ class ElementList(views.APIView):
         else:
             queryset = Element.objects.order_by(order_by).all()[offset:next_offset]
 
-        #print queryset.query
         return queryset
 
     def get(self, request, format=None):
@@ -84,29 +84,31 @@ class ElementList(views.APIView):
 
     def post(self, request, format=None):
 
-        try:
-            serializer = ElementSerializer(data=request.DATA)
-            if not serializer.is_valid():
-                return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #Validating here instead of serializer.validate
+        #because I can't access FILES data in serializer.validate
+        if "video_url" not in request.DATA \
+                and ("image" not in request.FILES \
+                or not request.FILES["image"]):
+            return response.Response(
+                "Provide an image or a video URL",
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
+        serializer = ElementSerializer(data=request.DATA)
+        if serializer.is_valid():
             serializer.save()
             element = Element.objects.get(id=serializer.data["id"])
             if request.FILES:
                 if "image" in request.FILES:
-                    #element = Element(image=request.FILES['image'])
                     element.image = request.FILES['image']
 
                 if "thumbnail_image" in request.FILES:
-                    #element = Element(thumbnail_image=request.FILES['thumbnail_image'])
                     element.thumbnail_image = request.FILES['thumbnail_image']
 
                 element.save()
 
             serializer = ElementSerializer(element)
             return response.Response(serializer.data)
-
-        except Exception as e:
-            pass
 
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -139,11 +141,9 @@ class ElementDetail(views.APIView):
                 element = Element.objects.get(id=serializer.data["id"])
                 if request.FILES:
                     if "image" in request.FILES:
-                        #element = Element(image=request.FILES['image'])
                         element.image = request.FILES['image']
 
                     if "thumbnail_image" in request.FILES:
-                        #element = Element(thumbnail_image=request.FILES['thumbnail_image'])
                         element.thumbnail_image = request.FILES['thumbnail_image']
 
                     element.save()
@@ -190,8 +190,6 @@ class GalleryElementSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='element.id')
     type = serializers.ReadOnlyField(source='element.type')
     name = serializers.ReadOnlyField(source='element.name')
-    #credit = serializers.ReadOnlyField(source='element.credit')
-    #description = serializers.ReadOnlyField(source='element.description')
     thumbnail_image_url = serializers.ReadOnlyField(source='element.thumbnail_image_url')
     image_url = serializers.ReadOnlyField(source='element.image_url')
     video_url = serializers.ReadOnlyField(source='element.video_url')
@@ -207,6 +205,14 @@ class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
         fields = ('id','name','description','thumbnail_image_url','elements','created_at')
+
+    def validate_name(self, value):
+        """
+        Make sure name is provided
+        """
+        if not value:
+            raise serializers.ValidationError("Provide a gallery name")
+        return value
 
 class GalleryList(views.APIView):
     """
@@ -232,13 +238,14 @@ class GalleryList(views.APIView):
         except Exception as e:
             pass
 
-        try:
-            filter_list = filter.split(" ")
-            or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0])
-            for term in filter_list[1:]:
-                or_query.add((Q(name__icontains=term) | Q(description__icontains=term)), or_query.connector)
-        except Exception as e:
-            pass
+        if filter:
+            try:
+                filter_list = filter.split(" ")
+                or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0])
+                for term in filter_list[1:]:
+                    or_query.add((Q(name__icontains=term) | Q(description__icontains=term)), or_query.connector)
+            except Exception as e:
+                pass
 
         if and_query:
             query = and_query
@@ -294,8 +301,16 @@ class GalleryList(views.APIView):
                             galleryelement = GalleryElement()
                             galleryelement.gallery = gallery
                             galleryelement.element = element
-                        galleryelement.credit = credits[count]
-                        galleryelement.description = descriptions[count]
+
+                        try:
+                            galleryelement.credit = credits[count]
+                        except Exception as e:
+                            pass
+                        try:
+                            galleryelement.description = descriptions[count]
+                        except Exception as e:
+                            pass
+
                         galleryelement.sort_by = sort_by
                         galleryelement.save()
                         sort_by += 1

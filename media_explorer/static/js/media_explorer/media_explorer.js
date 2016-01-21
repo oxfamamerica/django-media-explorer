@@ -1,21 +1,22 @@
 var MediaExplorer = {
 
+  field_id: "",
   type_input_id: "",
-  file_url_id: "",
-  file_input_id: "",
+  media_url_id: "",
+  media_input_id: "",
   caption_input_ids: [],
   credit_input_ids: [],
   style_input_id: "",
-  div_id: "",
+  current_image_id: "",
   callback: "",
   insert: function(obj){
 
-    $("#" + this.file_input_id).val(obj.id);
+    $("#" + this.media_input_id).val(obj.id);
 
     var html = "<img style='max-width:150px' src='";
     html += obj.thumbnail_image_url;
     html += "' >";
-    $("#" + this.div_id).html(html);
+    $("#" + this.current_image_id).html(html);
 
     try
     {
@@ -31,7 +32,7 @@ var MediaExplorer = {
 
         if ( obj.type == "image" )
         {
-            $("#" + this.file_url_id).val(obj.image_url);
+            $("#" + this.media_url_id).val(obj.image_url);
 
             for (var x=0;x < this.credit_input_ids.length;x++)
             {
@@ -57,10 +58,10 @@ var MediaExplorer = {
 
   },
   remove: function(){
-   	$("#" + this.div_id).html("");
+   	$("#" + this.current_image_id).html("");
     $("#" + this.type_input_id).val("");
-    $("#" + this.file_url_id).val("");
-    $("#" + this.file_input_id).val("");
+    $("#" + this.media_url_id).val("");
+    $("#" + this.media_input_id).val("");
     for (var x=0;x < this.credit_input_ids.length;x++)
     {
         $("#" + this.credit_input_ids[x]).val("");
@@ -73,8 +74,8 @@ var MediaExplorer = {
    	//$("#" + this.callback).val("");
 
     this.url_input_id = "";
-    this.div_id = "";
-    this.file_input_id = "";
+    this.current_image_id = "";
+    this.media_input_id = "";
     this.caption_input_ids = [];
     this.credit_input_ids = [];
     this.style_input_id = "";

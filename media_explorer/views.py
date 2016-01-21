@@ -25,13 +25,14 @@ class ElementStatsView(View):
         except Exception as e:
             pass
 
-        try:
-            filter_list = filter.split(" ")
-            or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0]) | Q(credit__icontains=filter_list[0])
-            for term in filter_list[1:]:
-                or_query.add((Q(name__icontains=term) | Q(description__icontains=term) | Q(credit__icontains=term)), or_query.connector)
-        except Exception as e:
-            pass
+        if filter:
+            try:
+                filter_list = filter.split(" ")
+                or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0]) | Q(credit__icontains=filter_list[0])
+                for term in filter_list[1:]:
+                    or_query.add((Q(name__icontains=term) | Q(description__icontains=term) | Q(credit__icontains=term)), or_query.connector)
+            except Exception as e:
+                pass
 
         if and_query:
             query = and_query
@@ -63,13 +64,14 @@ class GalleryStatsView(View):
 
         data["page_size"] = settings.DME_PAGE_SIZE
 
-        try:
-            filter_list = filter.split(" ")
-            or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0])
-            for term in filter_list[1:]:
-                or_query.add((Q(name__icontains=term) | Q(description__icontains=term)), or_query.connector)
-        except Exception as e:
-            pass
+        if filter:
+            try:
+                filter_list = filter.split(" ")
+                or_query = Q(name__icontains=filter_list[0]) | Q(description__icontains=filter_list[0])
+                for term in filter_list[1:]:
+                    or_query.add((Q(name__icontains=term) | Q(description__icontains=term)), or_query.connector)
+            except Exception as e:
+                pass
 
         if and_query:
             query = and_query

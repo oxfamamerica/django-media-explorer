@@ -11,7 +11,7 @@ CKEDITOR.plugins.add( 'media_explorer', {
         		MediaExplorer.type_input_id = "meWYSIWYGDataType";
         		MediaExplorer.div_id = "";
         		MediaExplorer.file_url_id = "meWYSIWYGDataMediaUrl";
-        		MediaExplorer.file_input_id = "meWYSIWYGDataMedia";
+        		MediaExplorer.media_input_id = "meWYSIWYGDataMedia";
         		MediaExplorer.caption_input_ids = ["meWYSIWYGDataCaption"];
         		MediaExplorer.credit_input_ids = ["meWYSIWYGDataCredit"];
         		MediaExplorer.callback = "meCKEditorCallback";

@@ -1,0 +1,55 @@
+{% load media_utility_tags %}
+{% get_media_from_json value|safe as data %}
+<div>
+    <table>
+        <tr>
+            <td>
+                <div>
+                    <input type="hidden" id="id__{{name}}" name="{{name}}" value="">
+                    <input type="hidden" id="id__type_{{name}}" name="__type_{{name}}" value="{{data.type}}">
+                    <input type="hidden" id="id__id_{{name}}" name="__id_{{name}}" value="{{data.id}}">
+                    <input type="hidden" id="id__caption_{{name}}" name="__caption_{{name}}" value="{{data.caption}}">
+                    <input type="hidden" id="id__credit_{{name}}" name="__credit_{{name}}" value="{{data.credit}}">
+                    <div id="id__media_info_{{name}}" style="display:none"></div>
+
+                    <div id='id__current_image_{{name}}' style='margin-bottom:5px'></div>
+                    <input class='addImage' type='button' value='Select' onclick="meSelectOrRemoveMedia('select','{{name}}');">
+                    <input class='removeImage' type='button' value='Remove' onclick="meSelectOrRemoveMedia('remove','{{name}}');";>
+                </div>
+                <div id="id__image_info_{{name}}" style="display:none">
+                    <input title="Enter caption" type="text" id="id__temp_caption_{{name}}" value="" placeholder="Enter caption" style="margin-top:10px;width:200px">
+<br>
+                    <input title="Enter credit" type="text" id="id__temp_credit_{{name}}" value="" placeholder="Enter credit" style="margin-top:10px;width:200px">
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<script>
+$(function() {
+
+
+    $( '#id__temp_caption_{{name}}' ).keyup( function() {
+        $("#id__caption_{{name}}").val($(this).val());
+        meBuildField("{{name}}");
+    }); 
+
+    $( '#id__temp_credit_{{name}}' ).keyup( function() {
+        $("#id__credit_{{name}}").val($(this).val());
+        meBuildField("{{name}}");
+    }); 
+
+    meProcessMedia("{{name}}");
+
+    $("#id__temp_caption_{{name}}").val($("#id__caption_{{name}}").val());
+    $("#id__temp_credit_{{name}}").val($("#id__credit_{{name}}").val());
+
+    {% if data %}
+    meProcessMedia("{{name}}");
+    {% endif %}
+
+
+});
+</script>

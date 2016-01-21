@@ -39,6 +39,14 @@ class Element(models.Model):
     def __unicode__(self):
         return u"%s" % (self.name)
 
+    def save(self, *args, **kwargs):
+        if not self.name:
+            if self.type == "image":
+                self.name = self.file_name
+            elif self.type == "video":
+                self.name = self.video_url
+        super(Element, self).save(*args, **kwargs)
+
 class Gallery(models.Model):
     """
     The Gallery model will contain info about our media gallery

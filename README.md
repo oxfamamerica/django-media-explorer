@@ -1,10 +1,11 @@
-# Django Media Explorer v0.3.0
+# Django Media Explorer
 
 A Django application to manage your images, video links, embeds and create slideshows.
 
 **Table of Contents**
 
 - [Installation](#installation)
+- [Dependencies](#dependencies)
 - [Tests](#tests)
 - [How it works](#how-it-works)
 - [Changelog](#changelog)
@@ -58,7 +59,7 @@ Add these to your urls.py
     ("^", include("media_explorer.urls")),
 ```
 
-Copy and paste this code into the bottom of your setting.py file.
+Copy and paste this code into the bottom of your settings.py file.
 
 ```
 try:
@@ -78,6 +79,18 @@ Run these migration commands to create your database tables.
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+#Dependencies
+
+Pip should install all the dependencies for you but if you prefer to install DME manually then be aware of these dependencies.
+
+This version (0.3.0) is for Django 1.7+ 
+
+Other dependencies are:
+- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0)
+- [Micawber](https://github.com/coleifer/micawber) (version 0.3.2)
+- [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
+- [CKEditor](https://github.com/ckeditor) (version 4.4.8)
 
 
 #Tests

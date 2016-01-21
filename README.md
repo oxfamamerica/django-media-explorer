@@ -32,15 +32,6 @@ source bin/activate
 pip install django-media-explorer
 ```
 
-NOTE 2: DME is dependant on Pillow and Pillow in turn has some platform dependencies. For instance if you are on Centos then you may need to run these commands before you install.
-
-```
-sudo yum install "Development Tools"
-sudo yum install python-devel
-sudo yum install libjpeg-devel
-sudo yum install zlib-devel
-```
-
 ##Update settings
 
 Add these to your INSTALLED_APPS settings
@@ -91,6 +82,15 @@ Other dependencies are:
 - [Micawber](https://github.com/coleifer/micawber) (version 0.3.2)
 - [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
 - [CKEditor](https://github.com/ckeditor) (version 4.4.8)
+
+Additionally Pillow has some platform dependencies. For instance if you are on Centos then you may need to run these commands before you install.
+
+```
+sudo yum install "Development Tools"
+sudo yum install python-devel
+sudo yum install libjpeg-devel
+sudo yum install zlib-devel
+```
 
 
 #Tests

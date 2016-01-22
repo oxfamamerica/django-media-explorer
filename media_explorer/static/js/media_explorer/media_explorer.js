@@ -2,7 +2,7 @@ var MediaExplorer = {
 
   field_id: "",
   type_input_id: "",
-  media_url_id: "",
+  file_url_id: "",
   media_input_id: "",
   caption_input_ids: [],
   credit_input_ids: [],
@@ -32,7 +32,7 @@ var MediaExplorer = {
 
         if ( obj.type == "image" )
         {
-            $("#" + this.media_url_id).val(obj.image_url);
+            $("#" + this.file_url_id).val(obj.image_url);
 
             for (var x=0;x < this.credit_input_ids.length;x++)
             {
@@ -60,7 +60,7 @@ var MediaExplorer = {
   remove: function(){
    	$("#" + this.current_image_id).html("");
     $("#" + this.type_input_id).val("");
-    $("#" + this.media_url_id).val("");
+    $("#" + this.file_url_id).val("");
     $("#" + this.media_input_id).val("");
     for (var x=0;x < this.credit_input_ids.length;x++)
     {

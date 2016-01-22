@@ -105,7 +105,14 @@ function meCKEditorGetResizedImagesCallback(image_id, data)
             submit: function(e,v,m,f){
                 e.preventDefault();
                 if ( !v ){ $.prompt.close(); return; }
-                if ( !f.image_url ){ $.prompt.goToState('state1'); return; }
+                if (data.length>0)
+                {
+                    if ( !f.image_url ){ $.prompt.goToState('state1'); return; }
+                }
+                else
+                {
+                    f.image_url = url;
+                }
                 meShowCKEditorImage(f.image_url,f.style,f.caption,f.credit);
             }
         },

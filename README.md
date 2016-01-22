@@ -243,6 +243,10 @@ If you provide the blog object (defined above) to your page - then your template
 
 #CHANGELOG
 
+##v0.3.4
+
+Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/4
+
 ##v0.3.3
 
 Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/3

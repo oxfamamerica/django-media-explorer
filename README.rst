@@ -83,6 +83,8 @@ After you add media fields to your model you can add data via the admin page (`S
 
 Go to https://github.com/oxfamamerica/django-media-explorer for more documentation on how to add images, videos and galleries programatically via the API and how to display media in your templates.
 
+Go to https://github.com/oxfamamerica/media_explorer_example to download and run an example blog application.
+
 
 Tests
 *****

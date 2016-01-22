@@ -243,6 +243,14 @@ If you provide the blog object (defined above) to your page - then your template
 
 #CHANGELOG
 
+##v0.3.2
+
+- Documentation updated to include new example app that can be used to demo DME.
+
+##v0.3.1
+
+- The micawber module failed to the test for the latest version of Django (1.9.1) and the problem has to do with django.utils.importlib (used by micawber) being removed from Django 1.9+ - so support for Django 1.9 has been temporaily removed.
+
 ##v0.3.0
 
 - You can now use DME custom model fields (MediaField and RichTextField) in your models.

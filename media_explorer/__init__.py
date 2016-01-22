@@ -8,7 +8,7 @@
 """
 
 __title__ = 'Django Media Explorer'
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 __author__ = 'Kofi Bosque-Hamilton (koficharlie@gmail.com)'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2016 Oxfam America'

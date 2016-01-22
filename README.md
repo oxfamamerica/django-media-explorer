@@ -75,7 +75,7 @@ python manage.py migrate
 
 Pip should install all the dependencies for you but if you prefer to install DME manually then be aware of these dependencies.
 
-This version (0.3.0) is for Django 1.7+ 
+This version (0.3.0) is for Django 1.7+ and 1.8+ (not yet tested on 1.9+)
 
 Other dependencies are:
 - [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0)
@@ -259,7 +259,7 @@ You can now use DME with Django 1.7+
 
 #TODO
 - Add capability to save to AWS S3/Azzure etc.
-- ~~Upgrade to latest Django version~~
+- Upgrade to latest Django version (Currently works on 1.7+ and 1.8+) - Add support for 1.9+
 - ~~Simplify form setup by implementing DME as Django fields.~~
 - Make it possible to resize images dynamically the first time they are accessed in a templatetag.
 

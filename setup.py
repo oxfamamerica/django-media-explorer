@@ -31,7 +31,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'django>=1.7',
+        'django>=1.7,<1.9',
         'micawber==0.3.2',
         'djangorestframework==3.0.0',
         'Pillow==2.6.1',

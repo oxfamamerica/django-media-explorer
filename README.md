@@ -111,6 +111,8 @@ python manage.py test media_explorer.tests.customfields.tests
 
 #How it works
 
+Go to https://github.com/oxfamamerica/media_explorer_example to download and run the example blog application.
+
 Let's say you have a blog model that looks like this:
 ```
 from django.db import models

@@ -161,7 +161,7 @@ from media_explorer.models import Element, Gallery, GalleryElement
 from django.core.files import File
 
 #Importing the Blog defined above
-from my_app.models import Blog
+from blog.models import Blog
 
 #Read your local image into my_file
 my_file = open(path_to_local_image_file,"rb")

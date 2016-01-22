@@ -46,8 +46,8 @@ Add these to your INSTALLED_APPS settings
 Add these to your urls.py
 
 ```
-    ("^ckeditor/", include("ckeditor.urls")),
-    ("^", include("media_explorer.urls")),
+    url("^ckeditor/", include("ckeditor.urls")),
+    url("^", include("media_explorer.urls")),
 ```
 
 Copy and paste this code into the bottom of your settings.py file.

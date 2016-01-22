@@ -29,7 +29,6 @@ def get_video(id):
         video = Element.objects.get(id=id,type="video")
         c = Context({"video":video})
         return t.render(c)
-        #return video.video_embed
     except:
         print traceback.format_exc()
 
@@ -98,24 +97,24 @@ def show_short_code(html):
         pattern_video = r'\[media-explorer-video-(?P<id>\d+)\]?'
         pattern_gallery = r'\[media-explorer-gallery-(?P<id>\d+)\]?'
 
-        match_img = re.findall(pattern_img, html, re.DOTALL)
-        match_video = re.findall(pattern_video, html, re.DOTALL)
-        match_gallery = re.findall(pattern_gallery, html, re.DOTALL)
+        match_img = re.findall(pattern_img, str(html), re.DOTALL)
+        match_video = re.findall(pattern_video, str(html), re.DOTALL)
+        match_gallery = re.findall(pattern_gallery, str(html), re.DOTALL)
 
         if match_img:
             for id in match_img:
                 html2 = get_inline_image(id)
-                html = re.sub(pattern_img,html2,html)
+                html = re.sub(pattern_img,html2,str(html))
 
         if match_video:
             for id in match_video:
                 html2 = get_video(id)
-                html = re.sub(pattern_video,html2,html)
+                html = re.sub(pattern_video,html2,str(html))
 
         if match_gallery:
             for id in match_gallery:
                 html2 = get_media_gallery(id)
-                html = re.sub(pattern_gallery,html2,html)
+                html = re.sub(pattern_gallery,html2,str(html))
 
         return html
     except:

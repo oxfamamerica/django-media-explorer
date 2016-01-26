@@ -1,4 +1,5 @@
 recursive-include media_explorer/static *
 recursive-include media_explorer/templates *
+recursive-include media_explorer/tests *.jpg
 
 include AUTHORS

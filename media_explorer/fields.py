@@ -5,6 +5,11 @@ from django.utils.translation import ugettext_lazy as _
 from media_explorer.models import Element, Gallery
 from media_explorer.forms import MediaFormField, RichTextFormField
 
+from django.db.models import signals, FileField
+from django.forms import forms
+from django.template.defaultfilters import filesizeformat
+
+
 def parse_media(string_or_obj):
     """Takes a JSON string, converts it into a Media object."""
     data = {}
@@ -82,7 +87,7 @@ class MediaField(models.TextField):
         return name, path, args, kwargs
 
     def db_type(self, connection):
-        return "text"
+        return "longtext"
 
     def from_db_value(self, value, expression, connection, context):
         if value is None:
@@ -181,7 +186,7 @@ class RichTextField(models.TextField):
         return name, path, args, kwargs
 
     def db_type(self, connection):
-        return "text"
+        return "longtext"
 
     def from_db_value(self, value, expression, connection, context):
         if value is None:
@@ -210,3 +215,77 @@ class RichTextField(models.TextField):
         defaults["form_class"] = RichTextFormField
         defaults.update(kwargs)
         return super(RichTextField, self).formfield(**defaults)
+
+class MediaImageField(FileField):
+    """
+    Forked from: https://djangosnippets.org/snippets/2206
+    Same as FileField, but you can specify:
+        * max_upload_size - a number indicating the maximum file size allowed for upload.
+            2.5MB - 2621440
+            5MB - 5242880
+            10MB - 10485760
+            20MB - 20971520
+            50MB - 5242880
+            100MB 104857600
+            250MB - 214958080
+            500MB - 429916160
+    """
+    def __init__(self, *args, **kwargs):
+        self.content_types = []
+        self.max_upload_size = 0
+        self.new_upload = False
+
+        #try:
+        #    self.content_types = ["image/png","image/jpeg","image/jpg","image/bmp","image/gif","image/tiff","image/ief","image/g3fax"]
+        #except Exception as e:
+        #    pass
+
+        try:
+            self.max_upload_size = kwargs.pop("max_upload_size")
+        except Exception as e:
+            pass
+
+        super(MediaImageField, self).__init__(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        data = super(MediaImageField, self).clean(*args, **kwargs)
+
+        file = data.file
+        #content_type = file.content_type
+        content_type = getattr(file,"content_type",None)
+
+        if "django.core.files.uploadedfile.InMemoryUploadedFile" in str(type(file)):
+            self.new_upload = True
+
+        if content_type and not content_type.lower().startswith("image/"):
+            raise forms.ValidationError(_('The file you selected is not an image. Please select an image.'))
+
+        if self.max_upload_size > 0 and \
+                file._size > self.max_upload_size:
+            raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(file._size)))
+
+        return data
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(MediaImageField, self).contribute_to_class( cls, name, **kwargs)
+        signals.post_save.connect(self.on_post_save_callback, sender=cls)
+        #signals.post_delete.connect(self.on_post_delete_callback, sender=cls)
+
+    def on_post_save_callback(self, instance, force=False, *args, **kwargs):
+        """
+        Save image into Element model
+        """
+        if self.new_upload and \
+                type(instance.__dict__[self.name]) in [str,unicode]:
+            data = {}
+            data["image"] = instance.__dict__[self.name]
+            element = Element()
+            element.__dict__.update(data)
+            element.save()
+
+    #def on_post_delete_callback(self, instance, force=False, *args, **kwargs):
+    #    """
+    #    TODO
+    #    Delete file from Element model
+    #    """
+    #    pass

@@ -164,7 +164,9 @@ class Blog(models.Model):
 
 After you add media fields to your model you can add data via the admin page ([See screenshot](https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png) - the red-circled button is the DME plugin button. It will allow you to insert media elements into your WYSIWYG)
 
-You can also add data programatically like this.
+After you add media you can access them by going to http://YOUR-WEBSITE-DOMAIN/media_explorer/ ([See screenshot](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)).
+
+You can add data programatically like this.
 
 ```
 

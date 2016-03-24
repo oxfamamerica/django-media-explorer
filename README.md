@@ -127,7 +127,7 @@ class Blog(models.Model):
 
 ```
 
-You can now add media to your blog by adding the MediaField and RichTextField fields.
+You can now add media to your blog by adding the MediaImageField, MediaField and RichTextField fields.
 
 ```
 from django.db import models
@@ -140,12 +140,21 @@ class Blog(models.Model):
 
     title = models.CharField(max_length=150)
 
+    #Since v0.3.5
+    #This is behaves exactly as Django's ImageField with following differences:
+    #1) You can add an optional max_upload_size=xxx to limit upload size
+    #2) After image is saved - an entry of the image will be added to Element table
+    my_image = MediaImageField(max_upload_size=5242880,upload_to="my_dir")
+
+    #Since v0.3.0
     #If you do not provide a type then media can be image/video/gallery
     lead_media = MediaField()
 
+    #Since v0.3.0
     #Providing a type will restrict the element to this type
     video = MediaField(type="video")
 
+    #Since v0.3.0
     #Entry is changed from TextField to RichTextField
     #You will see a CKEditor WYSIWYG with DME plugin
     #NOTE: You cannot use more than one RichText field in a model
@@ -244,6 +253,13 @@ If you provide the blog object (defined above) to your page - then your template
 ```
 
 #CHANGELOG
+
+##v0.3.5
+
+- Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/5
+- Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/6
+- Introduced DME_INCLUDE_JQUERY setting to fix issue #6 above. Set it to False if you are using your own version of JQuery and you do not want DME's version to conflict with yours.
+- You can now use DME custom model field MediaImageField. The MediaField saves the image/video, caption and credits information into a JSON field. What if you already use Django's FileField/ImageField but you want your image to be listed in DME and you do not want to refactor your code so the ImageField is changed to A JSON field. For this use case you can replace your Django FileField/ImageField with DME's MediaImageField. 
 
 ##v0.3.4
 

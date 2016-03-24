@@ -260,7 +260,7 @@ If you provide the blog object (defined above) to your page - then your template
 - Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/5
 - Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/6
 - Introduced DME_INCLUDE_JQUERY setting to fix issue #6 above. Set it to False if you are using your own version of JQuery and you do not want DME's version to conflict with yours.
-- You can now use DME custom model field MediaImageField. The MediaField saves the image/video, caption and credits information into a JSON field. What if you already use Django's FileField/ImageField but you want your image to be listed in DME and you do not want to refactor your code so the ImageField is changed to A JSON field. For this use case you can replace your Django FileField/ImageField with DME's MediaImageField. 
+- You can now use DME custom model field MediaImageField. The MediaField saves the image/video, caption and credits information into a JSON field. What if you already use Django's FileField/ImageField but you want your image to be listed in [DME](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg) and you do not want to refactor your code so the ImageField is changed to A JSON field. For this use case you can replace your Django FileField/ImageField with DME's MediaImageField. 
 
 ##v0.3.4
 

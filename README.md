@@ -144,7 +144,7 @@ class Blog(models.Model):
     #Since v0.3.5
     #This is behaves exactly as Django's ImageField with following differences:
     #1) You can add an optional max_upload_size=xxx to limit upload size
-    #2) After image is saved - an entry of the image will be added to Element table
+    #2) After image is saved you can see it listed at http://example.com/media_explorer
     my_image = MediaImageField(max_upload_size=5242880,upload_to="my_dir")
 
     #Since v0.3.0
@@ -164,7 +164,7 @@ class Blog(models.Model):
 
 After you add media fields to your model you can add data via the admin page ([See screenshot](https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png) - the red-circled button is the DME plugin button. It will allow you to insert media elements into your WYSIWYG)
 
-After you add media you can access them by going to http://YOUR-WEBSITE-DOMAIN/media_explorer/ ([See screenshot](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)).
+After you add media you can access them by going to http://example.com/media_explorer/ ([See screenshot](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)).
 
 You can add data programatically like this.
 

@@ -73,6 +73,7 @@ Add the MediaField and RichTextField fields to your model.
         #This is behaves exactly as Django's ImageField with following differences:
         #1) You can add an optional max_upload_size=xxx to limit upload size
         #2) After image is saved you can see it listed at http://example.com/media_explorer
+        #3) If the setting DME_RESIZE = True then image will be resized
         my_image = MediaImageField(max_upload_size=5242880,upload_to="my_dir")
 
         #Since v0.3.0

@@ -90,7 +90,7 @@ Add the MediaField and RichTextField fields to your model.
 
 After you add media fields to your model you can add data via the admin page (`See screenshot <https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png>`_ - the red-circled button is the DME plugin button. It will allow you to insert media elements into your WYSIWYG)
 
-After you add media you can access them by going to http://example.com/media_explorer/ (`See screenshot <http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg>`_.
+After you add media you can access them by going to http://example.com/media_explorer/ (`See screenshot here <http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg>`_).
 
 Go to https://github.com/oxfamamerica/django-media-explorer for more documentation on how to add images, videos and galleries programatically via the API and how to display media in your templates.
 

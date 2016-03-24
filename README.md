@@ -131,7 +131,7 @@ You can now add media to your blog by adding the MediaImageField, MediaField and
 
 ```
 from django.db import models
-from media_explorer.fields import MediaField, RichTextField
+from media_explorer.fields import MediaImageField, MediaField, RichTextField
 
 class Blog(models.Model):
     """

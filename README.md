@@ -62,6 +62,8 @@ except ImportError:
 
 The DME application will try to resize your images during your upload. If you do not want to resize your images then set the setting **DME_RESIZE = False** somewhere in your settings.py file (after the "media_explorer.settings" import).
 
+If you use your own JQuery in your admin pages and you do not want the DME application JQuery to conflict with yours then set **DME_INCLUDE_JQUERY = False** (since v0.3.6).
+
 ##Create tables
 
 Run these migration commands to create your database tables.

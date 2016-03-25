@@ -70,7 +70,7 @@ Add the MediaImageField, MediaField and RichTextField fields to your model.
         title = models.CharField(max_length=150)
 
         #Since v0.3.6
-        #This is behaves exactly as Django's ImageField with following differences:
+        #This behaves exactly as Django's ImageField with following differences:
         #1) You can add an optional max_upload_size=xxx to limit upload size
         #2) After image is saved you can see it listed at http://YOUR-DJANGO-SITE-URL/media_explorer
         #3) If the setting DME_RESIZE = True then image will be resized

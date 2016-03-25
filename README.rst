@@ -55,7 +55,7 @@ Run these migration commands to create your database tables.
 How it works
 ************
 
-Add the MediaField and RichTextField fields to your model.
+Add the MediaImageField, MediaField and RichTextField fields to your model.
 
 ::
 
@@ -72,7 +72,7 @@ Add the MediaField and RichTextField fields to your model.
         #Since v0.3.6
         #This is behaves exactly as Django's ImageField with following differences:
         #1) You can add an optional max_upload_size=xxx to limit upload size
-        #2) After image is saved you can see it listed at http://example.com/media_explorer
+        #2) After image is saved you can see it listed at http://YOUR-DJANGO-SITE-URL/media_explorer
         #3) If the setting DME_RESIZE = True then image will be resized
         my_image = MediaImageField(max_upload_size=5242880,upload_to="my_dir")
 
@@ -91,7 +91,7 @@ Add the MediaField and RichTextField fields to your model.
 
 After you add media fields to your model you can add data via the admin page (`See screenshot <https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png>`_ - the red-circled button is the DME plugin button. It will allow you to insert media elements into your WYSIWYG)
 
-After you add media you can access them by going to http://example.com/media_explorer/ (`See screenshot here <http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg>`_).
+After you add media you can access them by going to http://YOUR-DJANGO-SITE-URL/media_explorer/ (`See screenshot here <http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg>`_).
 
 Go to https://github.com/oxfamamerica/django-media-explorer for more documentation on how to add images, videos and galleries programatically via the API and how to display media in your templates.
 

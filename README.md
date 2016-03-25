@@ -146,7 +146,7 @@ class Blog(models.Model):
     #Since v0.3.6
     #This is behaves exactly as Django's ImageField with following differences:
     #1) You can add an optional max_upload_size=xxx to limit upload size
-    #2) After image is saved you can see it listed at http://example.com/media_explorer
+    #2) After image is saved you can see it listed at http://YOUR-DJANGO-SITE-URL/media_explorer
     #3) If the setting DME_RESIZE = True then image will be resized
     my_image = MediaImageField(max_upload_size=5242880,upload_to="my_dir")
 
@@ -167,7 +167,7 @@ class Blog(models.Model):
 
 After you add media fields to your model you can add data via the admin page ([See screenshot](https://s3.amazonaws.com/media.oxfamamerica.org/images/github/add_blog.png) - the red-circled button is the DME plugin button. It will allow you to insert media elements into your WYSIWYG)
 
-After you add media you can access them by going to http://example.com/media_explorer/ ([See screenshot](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)).
+After you add media you can access them by going to http://YOUR-DJANGO-SITE-URL/media_explorer/ ([See screenshot](http://media.oxfamamerica.org.s3.amazonaws.com/images/github/dme-images.jpg)).
 
 You can add data programatically like this.
 
@@ -213,7 +213,7 @@ ge2.element = video
 ge2.sort_by = 1
 ge2.save()
 
-#NOTE: If you go to your http://example.com/media_explorer link - you should see all the media you added above on the Media Explorer page.
+#NOTE: If you go to your http://YOUR-DJANGO-SITE-URL/media_explorer link - you should see all the media you added above on the Media Explorer page.
 
 
 #Add media to blog

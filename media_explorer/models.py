@@ -47,6 +47,29 @@ class Element(models.Model):
                 self.name = self.video_url
         super(Element, self).save(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        super(Element, self).save(*args, **kwargs)
+
+        save_again = False
+        if not self.name:
+            if self.type == "image":
+                self.name = self.file_name
+            elif self.type == "video":
+                self.name = self.video_url
+            save_again = True
+
+        #Init thumbnail_image
+        if self.type == "image" \
+                and self.image \
+                and not self.thumbnail_image:
+            self.image_url = self.image.url
+            self.thumbnail_image = self.image
+            self.thumbnail_image_url = self.image.url
+            save_again = True
+
+        if save_again:
+            super(Element, self).save(*args, **kwargs)
+
 class Gallery(models.Model):
     """
     The Gallery model will contain info about our media gallery

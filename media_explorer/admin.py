@@ -17,6 +17,7 @@ class ElementAdmin(admin.ModelAdmin):
             #Disconnect signal if we are manually entering embed code
             signals.post_save.disconnect(element_post_save, sender=Element)
             obj.save()
+            #Reconnect after save is done
             signals.post_save.connect(element_post_save, sender=Element)
         else:
             obj.save()

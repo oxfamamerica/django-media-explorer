@@ -260,6 +260,9 @@ If you provide the blog object (defined above) to your page - then your template
 
 #CHANGELOG
 
+##v0.3.9
+Adding 'manual_embed_code' field to allow for manually entering video embed code in the backend. When this is true DME will not automatically try to get the embed code.
+
 ##v0.3.6
 
 - Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/5

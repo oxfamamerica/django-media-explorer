@@ -25,6 +25,7 @@ class Element(models.Model):
     image_height = models.IntegerField(blank=True,null=True,default='0')
     video_url = models.CharField(max_length=255,blank=True,null=True)
     video_embed = models.TextField(blank=True,null=True)
+    manual_embed_code = models.BooleanField(_("Manually enter video embed code"), default=False)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_width = models.IntegerField(blank=True,null=True,default='0')

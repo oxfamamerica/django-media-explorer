@@ -48,15 +48,16 @@ class Element(models.Model):
         super(Element, self).save(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        super(Element, self).save(*args, **kwargs)
 
-        save_again = False
         if not self.name:
             if self.type == "image":
                 self.name = self.file_name
             elif self.type == "video":
                 self.name = self.video_url
-            save_again = True
+
+        super(Element, self).save(*args, **kwargs)
+
+        save_again = False
 
         #Init thumbnail_image
         if self.type == "image" \

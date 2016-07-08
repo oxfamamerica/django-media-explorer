@@ -80,8 +80,8 @@ Pip should install all the dependencies for you but if you prefer to install DME
 This version (0.3.0) is for Django 1.7+ and 1.8+ (not yet tested on 1.9+)
 
 Other dependencies are:
-- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0)
-- [Micawber](https://github.com/coleifer/micawber) (version 0.3.2)
+- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0 move to 3.1.1)
+- [Micawber](https://github.com/coleifer/micawber) (version 0.3.2 move to 0.3.3??)
 - [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
 - [CKEditor](https://github.com/ckeditor) (version 4.4.8)
 
@@ -259,6 +259,11 @@ If you provide the blog object (defined above) to your page - then your template
 ```
 
 #CHANGELOG
+
+##v0.4
+- Django Rest Framework upgraded to 3.1.2 since Django 1.9+ no longer provides **django.utils.datastructures.MergeDict** and **django.core.handlers.wsgi.STATUS_CODE_TEXT**.
+- Mcawber upgraded to 0.3.3 since Django 1.9+ no longer provides **django.utils.importlib.import_module**.
+
 
 ##v0.3.6
 

@@ -77,12 +77,12 @@ python manage.py migrate
 
 Pip should install all the dependencies for you but if you prefer to install DME manually then be aware of these dependencies.
 
-This version (0.3.0) is for Django 1.7+ and 1.8+ (not yet tested on 1.9+)
+This version (0.4) is for Django 1.7+ (TODO - test on 1.7, 1.8, 1.9)
 
 Other dependencies are:
-- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.0.0 move to 3.1.1)
-- [Micawber](https://github.com/coleifer/micawber) (version 0.3.2 move to 0.3.3??)
-- [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1)
+- [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.1.2)
+- [Micawber](https://github.com/coleifer/micawber) (version 0.3.3)
+- [Pillow](https://github.com/python-pillow/Pillow) (version 2.6.1+)
 - [CKEditor](https://github.com/ckeditor) (version 4.4.8)
 
 Additionally Pillow has some platform dependencies. For instance if you are on Centos then you may need to run these commands before you install.

@@ -5,6 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
+from django_boto.s3.storage import S3Storage
+
+s3 = S3Storage()
 
 class Element(models.Model):
     """
@@ -20,6 +23,7 @@ class Element(models.Model):
     credit = models.CharField(max_length=255,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
+    s3_image = models.ImageField(blank=True,null=True,storage=s3)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
     image_height = models.IntegerField(blank=True,null=True,default='0')
@@ -56,6 +60,7 @@ class Gallery(models.Model):
     short_code = models.CharField(max_length=100,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
+    s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     elements = models.ManyToManyField(Element, through="GalleryElement")
     created_at = models.DateTimeField(blank=True,null=True,auto_now_add=True)

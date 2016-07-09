@@ -45,7 +45,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': "%Y-%m-%d %T",
 }
 
-CKEDITOR_JQUERY_URL = "http://code.jquery.com/jquery-1.11.2.min.js"
+CKEDITOR_JQUERY_URL = "https://code.jquery.com/jquery-1.11.2.min.js"
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
 
@@ -58,9 +58,18 @@ CKEDITOR_CONFIGS = {
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink'],
             ['RemoveFormat', 'Source'],
+            ['Format', 'Styles'],
             ['MediaExplorer']
         ]
     }
 }
 
+#Boto settings
+AWS_ACCESS_KEY_ID = ""
+AWS_SECRET_ACCESS_KEY = ""
+#AWS_ACL_POLICY = "public-read"
+#BOTO_S3_BUCKET = ""
+#BOTO_S3_HOST = "s3.amazonaws.com"
+#BOTO_BUCKET_LOCATION = ""
+AWS_S3_FORCE_HTTP_URL = False
 

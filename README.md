@@ -37,6 +37,7 @@ pip install django-media-explorer
 Add these to your INSTALLED_APPS settings
 
 ```
+    'django_boto',
     'rest_framework',
     'micawber.contrib.mcdjango',
     'media_explorer',

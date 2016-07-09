@@ -11,7 +11,7 @@ class ElementAdmin(admin.ModelAdmin):
     list_filter = ('type',)
 
     def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ("type",)
+        self.exclude = ("type","s3_image","s3_thumbnail_image")
         form = super(ElementAdmin, self).get_form(request, obj, **kwargs)
         return form
 

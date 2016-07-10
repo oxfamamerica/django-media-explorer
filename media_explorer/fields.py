@@ -261,8 +261,8 @@ class MediaImageField(FileField):
             raise forms.ValidationError(_('The file you selected is not an image. Please select an image.'))
 
         if self.max_upload_size > 0 and \
-                file._size > self.max_upload_size:
-            raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(file._size)))
+                file.size > self.max_upload_size:
+            raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(file.size)))
 
         return data
 

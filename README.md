@@ -260,6 +260,9 @@ If you provide the blog object (defined above) to your page - then your template
 
 #CHANGELOG
 
+##v0.3.7
+- Replacing file._size with file.size in media_explorer.fields since file._size is not available when the object has already been created.
+
 ##v0.3.6
 
 - Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/5

@@ -7,6 +7,7 @@ from django.db.models import signals
 from django.conf import settings
 
 def get_s3_url(url):
+    print "GET S3 URL:", url
     s3_url = "https://s3.amazonaws.com/"
     s3_url += settings.BOTO_S3_BUCKET
     s3_url += url
@@ -186,74 +187,6 @@ def gallery_post_save(sender, instance, created, **kwargs):
     #Reconnect signal
     signals.post_save.connect(gallery_post_save, sender=Gallery)
 
-
-def element_post_saveOrig(sender, instance, created, **kwargs):
-
-    #Disconnect signal here so we don't recurse when we save
-    signals.post_save.disconnect(element_post_save, sender=Element)
-
-    if instance.video_url or instance.video_embed:
-        instance.type = "video"
-
-    if instance.image:
-        instance.image_url = instance.image.url
-      	instance.file_name = os.path.basename(str(instance.image_url))
-      	if not instance.name:
-            instance.name = instance.file_name
-
-        instance.thumbnail_image = instance.image
-
-    if instance.thumbnail_image:
-        instance.thumbnail_image_url = instance.thumbnail_image.url
-
-    instance.save()
-
-    if instance.video_url:
-        try:
-            import micawber
-            providers = micawber.bootstrap_basic()
-            oembed = providers.request(instance.video_url)
-            if "html" in oembed:
-                instance.video_embed = oembed["html"]
-
-                if not instance.thumbnail_image:
-                    if "thumbnail_url" in oembed:
-                        instance.thumbnail_image_url = oembed["thumbnail_url"]
-                    if "thumbnail_width" in oembed:
-                        instance.thumbnail_image_height = oembed["thumbnail_width"]
-                    if "thumbnail_height" in oembed:
-                        instance.thumbnail_image_height = oembed["thumbnail_height"]
-                
-        except Exception as e:
-            print traceback.format_exc()
-
-    #Process images and thumbnails
-    try:
-        if instance.image and instance.file_name != instance.original_file_name:
-            instance.original_file_name = instance.file_name
-            instance.save()
-            from .helpers import ImageHelper
-            helper = ImageHelper()
-            rtn = helper.resize(instance)
-            if rtn["success"]: 
-                if rtn["thumbnail_image_url"]:
-                    instance.thumbnail_image = ""
-                    instance.thumbnail_image_url = rtn["thumbnail_image_url"]
-                    instance.save()
-            else:
-                print rtn["message"]
-    except Exception as e:
-        print traceback.format_exc()
-
-    #If there is still no thumbnail image then use the default
-    if instance.type == "video" and not instance.thumbnail_image_url:
-        instance.thumbnail_image_url = settings.DME_VIDEO_THUMBNAIL_DEFAULT_URL
-
-    instance.save()
-
-    #Reconnect signal
-    signals.post_save.connect(element_post_save, sender=Element)
-
 def element_post_save(sender, instance, created, **kwargs):
 
     #Disconnect signal here so we don't recurse when we save
@@ -356,10 +289,10 @@ def element_post_save(sender, instance, created, **kwargs):
     if saved_to_s3:
         try:
             if os.path.isfile(settings.PROJECT_ROOT + instance.image.url):
-                os.remove(settings.PROJECT_ROOT + instance.image.url)
-
-                instance.image = s3_url
-                instance.save()
+                print "TODO - remove after resize is done"
+                #os.remove(settings.PROJECT_ROOT + instance.image.url)
+                #instance.image = s3_url
+                #instance.save()
 
         except:
             print traceback.format_exc()
@@ -367,10 +300,10 @@ def element_post_save(sender, instance, created, **kwargs):
     if thumbnail_saved_to_s3:
         try:
             if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image.url):
-                os.remove(settings.PROJECT_ROOT + instance.thumbnail_image.url)
-
-                instance.thumbnail_image = thumbnail_s3_url
-                instance.save()
+                print "TODO - remove after resize is done"
+                #os.remove(settings.PROJECT_ROOT + instance.thumbnail_image.url)
+                #instance.thumbnail_image = thumbnail_s3_url
+                #instance.save()
 
         except:
             print traceback.format_exc()
@@ -378,7 +311,50 @@ def element_post_save(sender, instance, created, **kwargs):
     #Reconnect signal
     signals.post_save.connect(element_post_save, sender=Element)
 
+def resizedimage_post_save(sender, instance, created, **kwargs):
+
+    #Disconnect signal here so we don't recurse when we save
+    signals.post_save.disconnect(resizedimage_post_save, sender=ResizedImage)
+
+    print "IMAGE URL:", instance.image_url
+
+    #If S3 upload is set and image is local then upload to S3 then delete local
+    saved_to_s3 = False
+    original_image_url = ""
+    if instance.image_url and settings.DME_UPLOAD_TO_S3 \
+            and not ( instance.image_url.startswith("https:") \
+            or instance.image_url.startswith("http:")  ):
+        try:
+            from django_boto.s3 import upload
+            upload(
+                str(settings.PROJECT_ROOT + instance.image_url),
+                name=str(instance.image_url), 
+                force_http=False)
+            saved_to_s3 = True
+            s3_url = get_s3_url(str(instance.image_url))
+
+            original_image_url = instance.image_url
+            instance.image_url = s3_url
+            instance.save()
+        except Exception as e:
+            print traceback.format_exc()
+
+    if saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + original_image_url):
+                os.remove(settings.PROJECT_ROOT + original_image_url)
+
+                #instance.image_url = s3_url
+                #instance.save()
+
+        except:
+            print traceback.format_exc()
+
+    #Reconnect signal
+    signals.post_save.connect(resizedimage_post_save, sender=ResizedImage)
+
 signals.post_save.connect(element_post_save, sender=Element)
 signals.post_save.connect(gallery_post_save, sender=Gallery)
 signals.post_delete.connect(element_post_delete, sender=Element)
 signals.post_delete.connect(resizedimage_post_delete, sender=ResizedImage)
+signals.post_save.connect(resizedimage_post_save, sender=ResizedImage)

@@ -1,6 +1,12 @@
 import os, re
 from django.conf import settings
-from django.db.models import get_model
+try:
+    #For Django version 1.8.13 and below
+    from django.db.models import get_model
+except ImportError:
+    #For Django version 1.9 and above
+    from django.apps import apps
+    get_model = apps.get_model
 
 try:
 	from PIL import Image, ImageOps

@@ -18,6 +18,73 @@ def __file_is_remote(url):
         return True
     return False
 
+def __upload_element_to_s3(instance):
+
+    if not settings.DME_UPLOAD_TO_S3:
+        return instance
+
+    print "In __upload_element_to_s3"
+
+    #If S3 upload is set and image is local then upload to S3 then delete local
+    saved_to_s3 = False
+    if instance.local_path and not __file_is_remote(instance.image_url):
+        try:
+            from django_boto.s3 import upload
+            upload(
+                str(settings.PROJECT_ROOT + instance.local_path),
+                name=instance.local_path, 
+                force_http=False)
+            saved_to_s3 = True
+            s3_url = __get_s3_url(instance.local_path)
+
+            instance.image_url = s3_url
+            instance.save()
+        except Exception as e:
+            print traceback.format_exc()
+
+    #If S3 upload is set and thumbnail image is local then upload to S3 then delete local
+    thumbnail_saved_to_s3 = False
+    if instance.thumbnail_local_path and not __file_is_remote(instance.thumbnail_image_url):
+        try:
+            from django_boto.s3 import upload
+            upload(
+                str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
+                name=instance.thumbnail_local_path,
+                force_http=False)
+            thumbnail_saved_to_s3 = True
+            thumbnail_s3_url = __get_s3_url(instance.thumbnail_local_path)
+
+            instance.thumbnail_image_url = thumbnail_s3_url
+            instance.save()
+        except Exception as e:
+            print traceback.format_exc()
+
+
+    if saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
+                os.remove(settings.PROJECT_ROOT + instance.local_path)
+                instance.image = s3_url
+                instance.local_path = None
+                instance.save()
+
+        except:
+            print traceback.format_exc()
+
+    if thumbnail_saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_local_path):
+                os.remove(settings.PROJECT_ROOT + instance.thumbnail_local_path)
+                instance.thumbnail_image = thumbnail_s3_url
+                instance.thumbnail_local_path = None
+                instance.save()
+
+        except:
+            print traceback.format_exc()
+
+    return instance
+
+
 class Element(models.Model):
     """
     The Element model will contain images and videos
@@ -198,69 +265,6 @@ def gallery_post_save(sender, instance, created, **kwargs):
     #Reconnect signal
     signals.post_save.connect(gallery_post_save, sender=Gallery)
 
-def __upload_element_to_s3(instance):
-
-    if not settings.DME_UPLOAD_TO_S3:
-        return instance
-
-    #If S3 upload is set and image is local then upload to S3 then delete local
-    saved_to_s3 = False
-    if instance.image and settings.DME_UPLOAD_TO_S3:
-        try:
-            from django_boto.s3 import upload
-            upload(
-                instance.image, 
-                name=instance.image.url, 
-                force_http=False)
-            saved_to_s3 = True
-            s3_url = __get_s3_url(instance.image.url)
-
-            instance.image_url = s3_url
-            instance.save()
-        except Exception as e:
-            print traceback.format_exc()
-
-    #If S3 upload is set and thumbnail image is local then upload to S3 then delete local
-    thumbnail_saved_to_s3 = False
-    if instance.thumbnail_image:
-        try:
-            from django_boto.s3 import upload
-            upload(
-                instance.thumbnail_image, 
-                name=instance.thumbnail_image.url, 
-                force_http=False)
-            thumbnail_saved_to_s3 = True
-            thumbnail_s3_url = __get_s3_url(instance.thumbnail_image.url)
-
-            instance.thumbnail_image_url = thumbnail_s3_url
-            instance.save()
-        except Exception as e:
-            print traceback.format_exc()
-
-
-    if saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.image.url):
-                os.remove(settings.PROJECT_ROOT + instance.image.url)
-                instance.image = s3_url
-                instance.save()
-
-        except:
-            print traceback.format_exc()
-
-    if thumbnail_saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image.url):
-                os.remove(settings.PROJECT_ROOT + instance.thumbnail_image.url)
-                instance.thumbnail_image = thumbnail_s3_url
-                instance.save()
-
-        except:
-            print traceback.format_exc()
-
-    return instance
-
-
 def element_post_save(sender, instance, created, **kwargs):
 
     #Disconnect signal here so we don't recurse when we save
@@ -319,6 +323,29 @@ def element_post_save(sender, instance, created, **kwargs):
                     if not __file_is_remote(instance.thumbnail_image_url):
                         instance.thumbnail_local_path = instance.thumbnail_image_url
                     instance.save()
+
+                #Now go through ResizedImages and delete local files
+                for r in ResizedImage.objects.filter(image=instance):
+                    print "About to delete:", r
+                    if r.local_path and __file_is_remote(r.image_url) \
+                            and not Element.objects.filter(local_path=r.local_path).exists() \
+                            and not Element.objects.filter(thumbnail_local_path=r.local_path).exists():
+                        try:
+                            if os.path.isfile(settings.PROJECT_ROOT + r.local_path):
+                                print "Deleting:", r
+                                os.remove(settings.PROJECT_ROOT + r.local_path)
+
+                                r.local_path = None
+                                r.save()
+
+                        except:
+                            print traceback.format_exc()
+
+
+                #Now upload Element to S3
+                print "About to upload instance to S3 and delete local files"
+                instance = __upload_element_to_s3(instance)
+
             else:
                 print rtn["message"]
     except Exception as e:
@@ -362,18 +389,6 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
             instance.image_url = s3_url
             instance.save()
         except Exception as e:
-            print traceback.format_exc()
-
-    if saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
-                print "Dont remove yet"
-                #os.remove(settings.PROJECT_ROOT + instance.local_path)
-
-                #instance.image_url = s3_url
-                #instance.save()
-
-        except:
             print traceback.format_exc()
 
     #Reconnect signal

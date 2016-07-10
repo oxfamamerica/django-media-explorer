@@ -347,10 +347,8 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
 
     #If S3 upload is set and image is local then upload to S3 then delete local
     saved_to_s3 = False
-    original_image_url = ""
     if instance.image_url and settings.DME_UPLOAD_TO_S3 \
-            and not ( instance.image_url.startswith("https:") \
-            or instance.image_url.startswith("http:")  ):
+            and not __file_is_remote(instance.image_url):
         try:
             from django_boto.s3 import upload
             upload(
@@ -360,7 +358,7 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
             saved_to_s3 = True
             s3_url = __get_s3_url(str(instance.image_url))
 
-            original_image_url = instance.image_url
+            instance.local_path = instance.image_url
             instance.image_url = s3_url
             instance.save()
         except Exception as e:
@@ -368,9 +366,9 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
 
     if saved_to_s3:
         try:
-            if os.path.isfile(settings.PROJECT_ROOT + original_image_url):
+            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
                 print "Dont remove yet"
-                #os.remove(settings.PROJECT_ROOT + original_image_url)
+                #os.remove(settings.PROJECT_ROOT + instance.local_path)
 
                 #instance.image_url = s3_url
                 #instance.save()

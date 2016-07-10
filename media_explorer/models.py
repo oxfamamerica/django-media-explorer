@@ -321,10 +321,8 @@ def element_post_save(sender, instance, created, **kwargs):
     #If S3 upload is set and image is local then upload to S3 then delete local
     saved_to_s3 = False
     if instance.image and settings.DME_UPLOAD_TO_S3:
-        print "We are about to upload to S3"
         try:
             from django_boto.s3 import upload
-            print instance.image.url
             upload(
                 instance.image, 
                 name=instance.image.url, 
@@ -332,15 +330,50 @@ def element_post_save(sender, instance, created, **kwargs):
             saved_to_s3 = True
             s3_url = get_s3_url(instance.image.url)
 
-            print s3_url
             instance.image_url = s3_url
             instance.save()
         except Exception as e:
             print traceback.format_exc()
 
+    #If S3 upload is set and thumbnail image is local then upload to S3 then delete local
+    thumbnail_saved_to_s3 = False
+    if instance.thumbnail_image and settings.DME_UPLOAD_TO_S3:
+        try:
+            from django_boto.s3 import upload
+            upload(
+                instance.thumbnail_image, 
+                name=instance.thumbnail_image.url, 
+                force_http=False)
+            thumbnail_saved_to_s3 = True
+            thumbnail_s3_url = get_s3_url(instance.thumbnail_image.url)
+
+            instance.thumbnail_image_url = thumbnail_s3_url
+            instance.save()
+        except Exception as e:
+            print traceback.format_exc()
+
+
     if saved_to_s3:
-        #TODO - delete local files
-        print "TODO delete files"
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.image.url):
+                os.remove(settings.PROJECT_ROOT + instance.image.url)
+
+                instance.image = s3_url
+                instance.save()
+
+        except:
+            print traceback.format_exc()
+
+    if thumbnail_saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image.url):
+                os.remove(settings.PROJECT_ROOT + instance.thumbnail_image.url)
+
+                instance.thumbnail_image = thumbnail_s3_url
+                instance.save()
+
+        except:
+            print traceback.format_exc()
 
     #Reconnect signal
     signals.post_save.connect(element_post_save, sender=Element)

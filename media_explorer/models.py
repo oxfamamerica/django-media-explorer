@@ -5,9 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
-#from django_boto.s3.storage import S3Storage
 
-#s3 = S3Storage()
+def get_s3_url(url):
+    s3_url = "https://s3.amazonaws.com/"
+    s3_url += settings.BOTO_S3_BUCKET
+    s3_url += url
+    return s3_url
 
 class Element(models.Model):
     """
@@ -23,18 +26,12 @@ class Element(models.Model):
     credit = models.CharField(max_length=255,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    #s3_image = models.ImageField(blank=True,null=True,storage=s3)
-    s3_image_bucket = models.CharField(max_length=255,blank=True,null=True)
-    s3_image_path = models.CharField(max_length=255,blank=True,null=True)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
     image_height = models.IntegerField(blank=True,null=True,default='0')
     video_url = models.CharField(max_length=255,blank=True,null=True)
     video_embed = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    #s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
-    s3_thumbnail_image_bucket = models.CharField(max_length=255,blank=True,null=True)
-    s3_thumbnail_image_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_width = models.IntegerField(blank=True,null=True,default='0')
     thumbnail_image_height = models.IntegerField(blank=True,null=True,default='0')
@@ -65,9 +62,6 @@ class Gallery(models.Model):
     short_code = models.CharField(max_length=100,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    #s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
-    s3_thumbnail_image_bucket = models.CharField(max_length=255,blank=True,null=True)
-    s3_thumbnail_image_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     elements = models.ManyToManyField(Element, through="GalleryElement")
     created_at = models.DateTimeField(blank=True,null=True,auto_now_add=True)
@@ -331,10 +325,16 @@ def element_post_save(sender, instance, created, **kwargs):
         try:
             from django_boto.s3 import upload
             print instance.image.url
-            s3_url = upload(instance.image,name=instance.image.url, force_http=False)
+            upload(
+                instance.image, 
+                name=instance.image.url, 
+                force_http=False)
             saved_to_s3 = True
+            s3_url = get_s3_url(instance.image.url)
 
             print s3_url
+            instance.image_url = s3_url
+            instance.save()
         except Exception as e:
             print traceback.format_exc()
 

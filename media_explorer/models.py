@@ -6,12 +6,17 @@ from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
 
-def get_s3_url(url):
+def __get_s3_url(url):
     print "GET S3 URL:", url
     s3_url = "https://s3.amazonaws.com/"
     s3_url += settings.BOTO_S3_BUCKET
     s3_url += url
     return s3_url
+
+def __file_is_remote(url):
+    if url.startswith("https:") or url.startswith("http:"):
+        return True
+    return False
 
 class Element(models.Model):
     """
@@ -34,7 +39,7 @@ class Element(models.Model):
     video_url = models.CharField(max_length=255,blank=True,null=True)
     video_embed = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    local_thumbnail_path = models.CharField(max_length=255,blank=True,null=True)
+    thumbnail_local_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_width = models.IntegerField(blank=True,null=True,default='0')
     thumbnail_image_height = models.IntegerField(blank=True,null=True,default='0')
@@ -208,7 +213,7 @@ def __upload_element_to_s3(instance):
                 name=instance.image.url, 
                 force_http=False)
             saved_to_s3 = True
-            s3_url = get_s3_url(instance.image.url)
+            s3_url = __get_s3_url(instance.image.url)
 
             instance.image_url = s3_url
             instance.save()
@@ -225,7 +230,7 @@ def __upload_element_to_s3(instance):
                 name=instance.thumbnail_image.url, 
                 force_http=False)
             thumbnail_saved_to_s3 = True
-            thumbnail_s3_url = get_s3_url(instance.thumbnail_image.url)
+            thumbnail_s3_url = __get_s3_url(instance.thumbnail_image.url)
 
             instance.thumbnail_image_url = thumbnail_s3_url
             instance.save()
@@ -264,16 +269,18 @@ def element_post_save(sender, instance, created, **kwargs):
     if instance.video_url or instance.video_embed:
         instance.type = "video"
 
-    if instance.image:
+    if instance.image and not __file_is_remote(instance.image.url):
         instance.image_url = instance.image.url
+        instance.local_path = instance.image.url
       	instance.file_name = os.path.basename(str(instance.image_url))
       	if not instance.name:
             instance.name = instance.file_name
 
         instance.thumbnail_image = instance.image
 
-    if instance.thumbnail_image:
+    if instance.thumbnail_image and not __file_is_remote(instance.thumbnail_image.url):
         instance.thumbnail_image_url = instance.thumbnail_image.url
+        instance.thumbnail_local_path = instance.thumbnail_image.url
 
     instance.save()
 
@@ -298,13 +305,10 @@ def element_post_save(sender, instance, created, **kwargs):
 
     #Process images and thumbnails
     try:
-        print "File name: ", instance.file_name
-        print "Original file name: ", instance.original_file_name
         if instance.image and instance.file_name != instance.original_file_name:
             instance.original_file_name = instance.file_name
-            instance.local_path = instance.image.url
             instance.save()
-            print "Original file name 2: ", instance.original_file_name
+
             from .helpers import ImageHelper
             helper = ImageHelper()
             rtn = helper.resize(instance)
@@ -312,7 +316,8 @@ def element_post_save(sender, instance, created, **kwargs):
                 if rtn["thumbnail_image_url"]:
                     instance.thumbnail_image = None
                     instance.thumbnail_image_url = rtn["thumbnail_image_url"]
-                    instance.local_path = instance.thumbnail_image_url
+                    if not __file_is_remote(instance.thumbnail_image_url):
+                        instance.thumbnail_local_path = instance.thumbnail_image_url
                     instance.save()
             else:
                 print rtn["message"]
@@ -353,7 +358,7 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
                 name=str(instance.image_url), 
                 force_http=False)
             saved_to_s3 = True
-            s3_url = get_s3_url(str(instance.image_url))
+            s3_url = __get_s3_url(str(instance.image_url))
 
             original_image_url = instance.image_url
             instance.image_url = s3_url

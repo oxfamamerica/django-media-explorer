@@ -38,6 +38,8 @@ class ImageHelper(object):
         image_width, image_height = image.size
         instance.image_width = image_width
         instance.image_height = image_height
+        print "In helpers file_name is: ", instance.file_name
+        print "In helpers original_file_name is: ", instance.original_file_name
         instance.save()
 
         if not settings.DME_RESIZE:

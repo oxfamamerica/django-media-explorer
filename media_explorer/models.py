@@ -27,12 +27,14 @@ class Element(models.Model):
     credit = models.CharField(max_length=255,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
+    local_path = models.CharField(max_length=255,blank=True,null=True)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
     image_height = models.IntegerField(blank=True,null=True,default='0')
     video_url = models.CharField(max_length=255,blank=True,null=True)
     video_embed = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
+    local_thumbnail_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_width = models.IntegerField(blank=True,null=True,default='0')
     thumbnail_image_height = models.IntegerField(blank=True,null=True,default='0')
@@ -100,6 +102,7 @@ class ResizedImage(models.Model):
     image = models.ForeignKey(Element)
     file_name = models.CharField(max_length=150,blank=True,null=True)
     size = models.CharField(max_length=25,blank=True,null=True)
+    local_path = models.CharField(max_length=255,blank=True,null=True)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
     image_height = models.IntegerField(blank=True,null=True,default='0')
@@ -124,9 +127,12 @@ def resizedimage_post_delete(sender, instance, **kwargs):
     """
 
     try:
-        if instance.image_url:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.image_url):
-                os.remove(settings.PROJECT_ROOT + instance.image_url)
+        if instance.local_path:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
+                os.remove(settings.PROJECT_ROOT + instance.local_path)
+
+            instance.local_path = None
+            instance.save()
     except:
         print traceback.format_exc()
 
@@ -187,6 +193,69 @@ def gallery_post_save(sender, instance, created, **kwargs):
     #Reconnect signal
     signals.post_save.connect(gallery_post_save, sender=Gallery)
 
+def __upload_element_to_s3(instance):
+
+    if not settings.DME_UPLOAD_TO_S3:
+        return instance
+
+    #If S3 upload is set and image is local then upload to S3 then delete local
+    saved_to_s3 = False
+    if instance.image and settings.DME_UPLOAD_TO_S3:
+        try:
+            from django_boto.s3 import upload
+            upload(
+                instance.image, 
+                name=instance.image.url, 
+                force_http=False)
+            saved_to_s3 = True
+            s3_url = get_s3_url(instance.image.url)
+
+            instance.image_url = s3_url
+            instance.save()
+        except Exception as e:
+            print traceback.format_exc()
+
+    #If S3 upload is set and thumbnail image is local then upload to S3 then delete local
+    thumbnail_saved_to_s3 = False
+    if instance.thumbnail_image:
+        try:
+            from django_boto.s3 import upload
+            upload(
+                instance.thumbnail_image, 
+                name=instance.thumbnail_image.url, 
+                force_http=False)
+            thumbnail_saved_to_s3 = True
+            thumbnail_s3_url = get_s3_url(instance.thumbnail_image.url)
+
+            instance.thumbnail_image_url = thumbnail_s3_url
+            instance.save()
+        except Exception as e:
+            print traceback.format_exc()
+
+
+    if saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.image.url):
+                os.remove(settings.PROJECT_ROOT + instance.image.url)
+                instance.image = s3_url
+                instance.save()
+
+        except:
+            print traceback.format_exc()
+
+    if thumbnail_saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image.url):
+                os.remove(settings.PROJECT_ROOT + instance.thumbnail_image.url)
+                instance.thumbnail_image = thumbnail_s3_url
+                instance.save()
+
+        except:
+            print traceback.format_exc()
+
+    return instance
+
+
 def element_post_save(sender, instance, created, **kwargs):
 
     #Disconnect signal here so we don't recurse when we save
@@ -229,16 +298,21 @@ def element_post_save(sender, instance, created, **kwargs):
 
     #Process images and thumbnails
     try:
+        print "File name: ", instance.file_name
+        print "Original file name: ", instance.original_file_name
         if instance.image and instance.file_name != instance.original_file_name:
             instance.original_file_name = instance.file_name
+            instance.local_path = instance.image.url
             instance.save()
+            print "Original file name 2: ", instance.original_file_name
             from .helpers import ImageHelper
             helper = ImageHelper()
             rtn = helper.resize(instance)
             if rtn["success"]: 
                 if rtn["thumbnail_image_url"]:
-                    instance.thumbnail_image = ""
+                    instance.thumbnail_image = None
                     instance.thumbnail_image_url = rtn["thumbnail_image_url"]
+                    instance.local_path = instance.thumbnail_image_url
                     instance.save()
             else:
                 print rtn["message"]
@@ -252,61 +326,9 @@ def element_post_save(sender, instance, created, **kwargs):
     instance.save()
 
     #If S3 upload is set and image is local then upload to S3 then delete local
-    saved_to_s3 = False
-    if instance.image and settings.DME_UPLOAD_TO_S3:
-        try:
-            from django_boto.s3 import upload
-            upload(
-                instance.image, 
-                name=instance.image.url, 
-                force_http=False)
-            saved_to_s3 = True
-            s3_url = get_s3_url(instance.image.url)
-
-            instance.image_url = s3_url
-            instance.save()
-        except Exception as e:
-            print traceback.format_exc()
-
-    #If S3 upload is set and thumbnail image is local then upload to S3 then delete local
-    thumbnail_saved_to_s3 = False
-    if instance.thumbnail_image and settings.DME_UPLOAD_TO_S3:
-        try:
-            from django_boto.s3 import upload
-            upload(
-                instance.thumbnail_image, 
-                name=instance.thumbnail_image.url, 
-                force_http=False)
-            thumbnail_saved_to_s3 = True
-            thumbnail_s3_url = get_s3_url(instance.thumbnail_image.url)
-
-            instance.thumbnail_image_url = thumbnail_s3_url
-            instance.save()
-        except Exception as e:
-            print traceback.format_exc()
-
-
-    if saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.image.url):
-                print "TODO - remove after resize is done"
-                #os.remove(settings.PROJECT_ROOT + instance.image.url)
-                #instance.image = s3_url
-                #instance.save()
-
-        except:
-            print traceback.format_exc()
-
-    if thumbnail_saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image.url):
-                print "TODO - remove after resize is done"
-                #os.remove(settings.PROJECT_ROOT + instance.thumbnail_image.url)
-                #instance.thumbnail_image = thumbnail_s3_url
-                #instance.save()
-
-        except:
-            print traceback.format_exc()
+    if instance.image and settings.DME_UPLOAD_TO_S3 \
+            and not settings.DME_RESIZE:
+        instance = __upload_element_to_s3(instance)
 
     #Reconnect signal
     signals.post_save.connect(element_post_save, sender=Element)
@@ -342,7 +364,8 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
     if saved_to_s3:
         try:
             if os.path.isfile(settings.PROJECT_ROOT + original_image_url):
-                os.remove(settings.PROJECT_ROOT + original_image_url)
+                print "Dont remove yet"
+                #os.remove(settings.PROJECT_ROOT + original_image_url)
 
                 #instance.image_url = s3_url
                 #instance.save()

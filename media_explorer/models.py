@@ -325,8 +325,22 @@ def element_post_save(sender, instance, created, **kwargs):
     instance.save()
 
     #If S3 upload is set and image is local then upload to S3 then delete local
+    saved_to_s3 = False
     if instance.image and settings.DME_UPLOAD_TO_S3:
         print "We are about to upload to S3"
+        try:
+            from django_boto.s3 import upload
+            print instance.image.url
+            s3_url = upload(instance.image,name=instance.image.url, force_http=False)
+            saved_to_s3 = True
+
+            print s3_url
+        except Exception as e:
+            print traceback.format_exc()
+
+    if saved_to_s3:
+        #TODO - delete local files
+        print "TODO delete files"
 
     #Reconnect signal
     signals.post_save.connect(element_post_save, sender=Element)

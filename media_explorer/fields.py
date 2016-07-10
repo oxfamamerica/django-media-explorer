@@ -250,8 +250,17 @@ class MediaImageField(FileField):
     def clean(self, *args, **kwargs):
         data = super(MediaImageField, self).clean(*args, **kwargs)
 
+        #TODO - if data.file.url starts with http:// or https:// then pass through
+        try:
+            #We are allowing this field to store local or remote files
+            #If it is a remote file then skip the validation
+            if args[0].__dict__["name"].startswith("http://") \
+                    or args[0].__dict__["name"].startswith("https://"):
+                return data
+        except Exception as e:
+            pass
+
         file = data.file
-        #content_type = file.content_type
         content_type = getattr(file,"content_type",None)
 
         if "django.core.files.uploadedfile.InMemoryUploadedFile" in str(type(file)):
@@ -261,8 +270,8 @@ class MediaImageField(FileField):
             raise forms.ValidationError(_('The file you selected is not an image. Please select an image.'))
 
         if self.max_upload_size > 0 and \
-                file._size > self.max_upload_size:
-            raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(file._size)))
+                file.size > self.max_upload_size:
+            raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(file.size)))
 
         return data
 

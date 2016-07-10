@@ -5,9 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
-from django_boto.s3.storage import S3Storage
+#from django_boto.s3.storage import S3Storage
 
-s3 = S3Storage()
+#s3 = S3Storage()
 
 class Element(models.Model):
     """
@@ -23,14 +23,18 @@ class Element(models.Model):
     credit = models.CharField(max_length=255,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    s3_image = models.ImageField(blank=True,null=True,storage=s3)
+    #s3_image = models.ImageField(blank=True,null=True,storage=s3)
+    s3_image_bucket = models.CharField(max_length=255,blank=True,null=True)
+    s3_image_path = models.CharField(max_length=255,blank=True,null=True)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
     image_height = models.IntegerField(blank=True,null=True,default='0')
     video_url = models.CharField(max_length=255,blank=True,null=True)
     video_embed = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
+    #s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
+    s3_thumbnail_image_bucket = models.CharField(max_length=255,blank=True,null=True)
+    s3_thumbnail_image_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_width = models.IntegerField(blank=True,null=True,default='0')
     thumbnail_image_height = models.IntegerField(blank=True,null=True,default='0')
@@ -61,7 +65,9 @@ class Gallery(models.Model):
     short_code = models.CharField(max_length=100,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
-    s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
+    #s3_thumbnail_image = models.ImageField(blank=True,null=True,storage=s3)
+    s3_thumbnail_image_bucket = models.CharField(max_length=255,blank=True,null=True)
+    s3_thumbnail_image_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     elements = models.ManyToManyField(Element, through="GalleryElement")
     created_at = models.DateTimeField(blank=True,null=True,auto_now_add=True)
@@ -187,6 +193,73 @@ def gallery_post_save(sender, instance, created, **kwargs):
     signals.post_save.connect(gallery_post_save, sender=Gallery)
 
 
+def element_post_saveOrig(sender, instance, created, **kwargs):
+
+    #Disconnect signal here so we don't recurse when we save
+    signals.post_save.disconnect(element_post_save, sender=Element)
+
+    if instance.video_url or instance.video_embed:
+        instance.type = "video"
+
+    if instance.image:
+        instance.image_url = instance.image.url
+      	instance.file_name = os.path.basename(str(instance.image_url))
+      	if not instance.name:
+            instance.name = instance.file_name
+
+        instance.thumbnail_image = instance.image
+
+    if instance.thumbnail_image:
+        instance.thumbnail_image_url = instance.thumbnail_image.url
+
+    instance.save()
+
+    if instance.video_url:
+        try:
+            import micawber
+            providers = micawber.bootstrap_basic()
+            oembed = providers.request(instance.video_url)
+            if "html" in oembed:
+                instance.video_embed = oembed["html"]
+
+                if not instance.thumbnail_image:
+                    if "thumbnail_url" in oembed:
+                        instance.thumbnail_image_url = oembed["thumbnail_url"]
+                    if "thumbnail_width" in oembed:
+                        instance.thumbnail_image_height = oembed["thumbnail_width"]
+                    if "thumbnail_height" in oembed:
+                        instance.thumbnail_image_height = oembed["thumbnail_height"]
+                
+        except Exception as e:
+            print traceback.format_exc()
+
+    #Process images and thumbnails
+    try:
+        if instance.image and instance.file_name != instance.original_file_name:
+            instance.original_file_name = instance.file_name
+            instance.save()
+            from .helpers import ImageHelper
+            helper = ImageHelper()
+            rtn = helper.resize(instance)
+            if rtn["success"]: 
+                if rtn["thumbnail_image_url"]:
+                    instance.thumbnail_image = ""
+                    instance.thumbnail_image_url = rtn["thumbnail_image_url"]
+                    instance.save()
+            else:
+                print rtn["message"]
+    except Exception as e:
+        print traceback.format_exc()
+
+    #If there is still no thumbnail image then use the default
+    if instance.type == "video" and not instance.thumbnail_image_url:
+        instance.thumbnail_image_url = settings.DME_VIDEO_THUMBNAIL_DEFAULT_URL
+
+    instance.save()
+
+    #Reconnect signal
+    signals.post_save.connect(element_post_save, sender=Element)
+
 def element_post_save(sender, instance, created, **kwargs):
 
     #Disconnect signal here so we don't recurse when we save
@@ -250,6 +323,10 @@ def element_post_save(sender, instance, created, **kwargs):
         instance.thumbnail_image_url = settings.DME_VIDEO_THUMBNAIL_DEFAULT_URL
 
     instance.save()
+
+    #If S3 upload is set and image is local then upload to S3 then delete local
+    if instance.image and settings.DME_UPLOAD_TO_S3:
+        print "We are about to upload to S3"
 
     #Reconnect signal
     signals.post_save.connect(element_post_save, sender=Element)

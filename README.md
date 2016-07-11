@@ -65,6 +65,27 @@ The DME application will try to resize your images during your upload. If you do
 
 If you use your own JQuery in your admin pages and you do not want the DME application JQuery to conflict with yours then set **DME_INCLUDE_JQUERY = False** (since v0.3.6).
 
+Update these AWS settings to upload to S3 (since v0.4)
+
+```
+#These are required
+AWS_ACCESS_KEY_ID = "xxx"
+AWS_SECRET_ACCESS_KEY = "xxx"
+BOTO_S3_BUCKET = "xxx"
+DME_UPLOAD_TO_S3 = True
+
+#These are optional
+#AWS_ACL_POLICY = "public-read"
+#BOTO_S3_HOST = "s3.amazonaws.com"
+#BOTO_BUCKET_LOCATION = ""
+#AWS_S3_FORCE_HTTP_URL = False
+```
+
+Update these AWS settings to delete from S3 when you delete a db entry (since v0.4)
+```
+DME_DELETE_FROM_S3 = True
+```
+
 ##Create tables
 
 Run these migration commands to create your database tables.
@@ -267,6 +288,8 @@ If you provide the blog object (defined above) to your page - then your template
 
 ##v0.3.7
 - Replacing file._size with file.size in media_explorer.fields since file._size is not available when the object has already been created.
+
+- Fix for the last resized image being overritten.
 
 ##v0.3.6
 

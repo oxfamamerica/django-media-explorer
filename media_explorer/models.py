@@ -34,6 +34,9 @@ def __upload_element_to_s3(instance):
             saved_to_s3 = True
             s3_url = __get_s3_url(instance.local_path)
 
+            instance.s3_path = instance.local_path
+            instance.s3_bucket = settings.BOTO_S3_BUCKET
+
             instance.image_url = s3_url
             instance.save()
         except Exception as e:
@@ -50,6 +53,9 @@ def __upload_element_to_s3(instance):
                 force_http=False)
             thumbnail_saved_to_s3 = True
             thumbnail_s3_url = __get_s3_url(instance.thumbnail_local_path)
+
+            instance.thumbnail_s3_path = instance.thumbnail_local_path
+            instance.thumbnail_s3_bucket = settings.BOTO_S3_BUCKET
 
             instance.thumbnail_image_url = thumbnail_s3_url
             instance.save()
@@ -96,6 +102,8 @@ class Element(models.Model):
     credit = models.CharField(max_length=255,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
+    s3_bucket = models.CharField(max_length=255,blank=True,null=True)
+    s3_path = models.CharField(max_length=255,blank=True,null=True)
     local_path = models.CharField(max_length=255,blank=True,null=True)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
@@ -103,6 +111,8 @@ class Element(models.Model):
     video_url = models.CharField(max_length=255,blank=True,null=True)
     video_embed = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")
+    thumbnail_s3_bucket = models.CharField(max_length=255,blank=True,null=True)
+    thumbnail_s3_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_local_path = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_url = models.CharField(max_length=255,blank=True,null=True)
     thumbnail_image_width = models.IntegerField(blank=True,null=True,default='0')
@@ -171,6 +181,8 @@ class ResizedImage(models.Model):
     image = models.ForeignKey(Element)
     file_name = models.CharField(max_length=150,blank=True,null=True)
     size = models.CharField(max_length=25,blank=True,null=True)
+    s3_bucket = models.CharField(max_length=255,blank=True,null=True)
+    s3_path = models.CharField(max_length=255,blank=True,null=True)
     local_path = models.CharField(max_length=255,blank=True,null=True)
     image_url = models.CharField(max_length=255,blank=True,null=True)
     image_width = models.IntegerField(blank=True,null=True,default='0')
@@ -211,25 +223,31 @@ def element_post_delete(sender, instance, **kwargs):
     """
 
     try:
-        if instance.image:
-            if os.path.isfile(instance.image.path):
-                os.remove(instance.image.path)
+        if instance.local_path:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
+                os.remove(settings.PROJECT_ROOT + instance.local_path)
+
+                instance.local_path = None
+                instance.save()
     except:
         print traceback.format_exc()
 
     try:
-        if instance.thumbnail_image:
-            if os.path.isfile(instance.thumbnail_image.path):
-                os.remove(instance.thumbnail_image.path)
+        if instance.thumbnail_local_path:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_local_path):
+                os.remove(settings.PROJECT_ROOT + instance.thumbnail_local_path)
+
+                instance.thumbnail_local_path = None
+                instance.save()
     except:
         print traceback.format_exc()
 
-    try:
-        if instance.thumbnail_image_url:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image_url):
-                os.remove(settings.PROJECT_ROOT + instance.thumbnail_image_url)
-    except:
-        print traceback.format_exc()
+    #try:
+    #    if instance.thumbnail_image_url:
+    #        if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image_url):
+    #            os.remove(settings.PROJECT_ROOT + instance.thumbnail_image_url)
+    #except:
+    #    print traceback.format_exc()
 
     try:
         #Check to see if this thumbanil is used by gallery - if so resave the gallery to reset thumbnail
@@ -237,6 +255,18 @@ def element_post_delete(sender, instance, **kwargs):
             gallery.save()
     except:
         print traceback.format_exc()
+
+    try:
+        print "TODO - delete from S3"
+        if settings.DME_DELETE_S3_FILE:
+            print "TODO - let's delete"
+        #from boto.s3.connection import S3Connection
+        #aws_connection = S3Connection(AWS_KEY, AWS_SECRET)
+        #bucket = aws_connection.get_bucket('bucketname')
+        #bucket.delete_key(key)
+    except:
+        print traceback.format_exc()
+ 
 
 def gallery_post_save(sender, instance, created, **kwargs):
     #Disconnect signal here so we don't recurse when we save
@@ -374,9 +404,12 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
                 str(settings.PROJECT_ROOT + instance.image_url),
                 name=str(instance.image_url), 
                 force_http=False)
+
             saved_to_s3 = True
             s3_url = __get_s3_url(str(instance.image_url))
 
+            instance.s3_path = instance.image_url
+            instance.s3_bucket = settings.BOTO_S3_BUCKET
             instance.local_path = instance.image_url
             instance.image_url = s3_url
             instance.save()

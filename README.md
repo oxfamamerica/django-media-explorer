@@ -64,14 +64,16 @@ except ImportError:
 Here are the DME application settings you need. Put them somewhere in your settings.py file (after the "media_explorer.settings" import).
 
 ```
-#The DME application will try to resize your images during your upload unless you set to False
+#The DME application will try to resize your images 
+#during your upload unless you set to False
 DME_RESIZE = False
 ```
 
 These settings controls DME Admin JQuery loading (since v0.3.6).
 
 ```
-#If you use your own JQuery in your admin pages and you do not want the DME application JQuery to conflict with yours then set to False
+#If you use your own JQuery in your admin pages and you do not want 
+#the DME application JQuery to conflict with yours then set to False
 DME_INCLUDE_JQUERY = False
 ```
 

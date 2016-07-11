@@ -38,8 +38,6 @@ class ImageHelper(object):
         image_width, image_height = image.size
         instance.image_width = image_width
         instance.image_height = image_height
-        print "In helpers file_name is: ", instance.file_name
-        print "In helpers original_file_name is: ", instance.original_file_name
         instance.save()
 
         if not settings.DME_RESIZE:
@@ -204,6 +202,7 @@ class ImageHelper(object):
                 new_url = new_dir + new_file_name
                 rtn_resize = self._crop_and_resize(image, retina_size_width, retina_size_height, new_url)
                 if rtn_resize["success"]:
+                    ri = ResizedImage()
                     ri.image = instance
                     ri.file_name = new_file_name
                     ri.image_url = new_url

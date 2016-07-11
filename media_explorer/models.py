@@ -7,7 +7,6 @@ from django.db.models import signals
 from django.conf import settings
 
 def __get_s3_url(url):
-    print "GET S3 URL:", url
     s3_url = "https://s3.amazonaws.com/"
     s3_url += settings.BOTO_S3_BUCKET
     s3_url += url
@@ -22,8 +21,6 @@ def __upload_element_to_s3(instance):
 
     if not settings.DME_UPLOAD_TO_S3:
         return instance
-
-    print "In __upload_element_to_s3"
 
     #If S3 upload is set and image is local then upload to S3 then delete local
     saved_to_s3 = False
@@ -326,13 +323,11 @@ def element_post_save(sender, instance, created, **kwargs):
 
                 #Now go through ResizedImages and delete local files
                 for r in ResizedImage.objects.filter(image=instance):
-                    print "About to delete:", r
                     if r.local_path and __file_is_remote(r.image_url) \
                             and not Element.objects.filter(local_path=r.local_path).exists() \
                             and not Element.objects.filter(thumbnail_local_path=r.local_path).exists():
                         try:
                             if os.path.isfile(settings.PROJECT_ROOT + r.local_path):
-                                print "Deleting:", r
                                 os.remove(settings.PROJECT_ROOT + r.local_path)
 
                                 r.local_path = None
@@ -343,7 +338,6 @@ def element_post_save(sender, instance, created, **kwargs):
 
 
                 #Now upload Element to S3
-                print "About to upload instance to S3 and delete local files"
                 instance = __upload_element_to_s3(instance)
 
             else:
@@ -369,8 +363,6 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
 
     #Disconnect signal here so we don't recurse when we save
     signals.post_save.disconnect(resizedimage_post_save, sender=ResizedImage)
-
-    print "IMAGE URL:", instance.image_url
 
     #If S3 upload is set and image is local then upload to S3 then delete local
     saved_to_s3 = False

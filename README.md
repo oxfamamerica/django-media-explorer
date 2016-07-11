@@ -111,7 +111,7 @@ python manage.py migrate
 
 Pip should install all the dependencies for you but if you prefer to install DME manually then be aware of these dependencies.
 
-This version (0.4) is for Django 1.7+ (TODO - test on 1.7, 1.8, 1.9)
+This version (0.4) is for Django 1.7+
 
 Other dependencies are:
 - [Django Rest Framework](http://www.django-rest-framework.org/) (version 3.1.2)

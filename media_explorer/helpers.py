@@ -196,6 +196,7 @@ class ImageHelper(object):
                 new_url = new_dir + new_file_name
                 rtn_resize = self._crop_and_resize(image, retina_size_width, retina_size_height, new_url)
                 if rtn_resize["success"]:
+                    ri = ResizedImage()
                     ri.image = instance
                     ri.file_name = new_file_name
                     ri.image_url = new_url

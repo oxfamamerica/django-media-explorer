@@ -66,6 +66,7 @@ Here are the DME application settings you need. Put them somewhere in your setti
 ```
 #The DME application will try to resize your images 
 #during your upload unless you set to False
+#Default is True
 DME_RESIZE = False
 ```
 
@@ -74,6 +75,7 @@ These settings controls DME Admin JQuery loading (since v0.3.6).
 ```
 #If you use your own JQuery in your admin pages and you do not want 
 #the DME application JQuery to conflict with yours then set to False
+#Default is True
 DME_INCLUDE_JQUERY = False
 ```
 
@@ -84,6 +86,7 @@ Update these AWS settings to upload to S3 (since v0.4)
 AWS_ACCESS_KEY_ID = "xxx"
 AWS_SECRET_ACCESS_KEY = "xxx"
 BOTO_S3_BUCKET = "xxx"
+#Default is False
 DME_UPLOAD_TO_S3 = True
 
 #These are optional
@@ -95,6 +98,7 @@ AWS_S3_FORCE_HTTP_URL = False
 
 Update these AWS settings to delete from S3 when you delete a db entry (since v0.4)
 ```
+#Default is False
 DME_DELETE_FROM_S3 = True
 ```
 

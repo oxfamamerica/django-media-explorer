@@ -75,10 +75,10 @@ BOTO_S3_BUCKET = "xxx"
 DME_UPLOAD_TO_S3 = True
 
 #These are optional
-#AWS_ACL_POLICY = "public-read"
-#BOTO_S3_HOST = "s3.amazonaws.com"
-#BOTO_BUCKET_LOCATION = ""
-#AWS_S3_FORCE_HTTP_URL = False
+AWS_ACL_POLICY = "public-read"
+BOTO_S3_HOST = "s3.amazonaws.com"
+BOTO_BUCKET_LOCATION = "xxx"
+AWS_S3_FORCE_HTTP_URL = False
 ```
 
 Update these AWS settings to delete from S3 when you delete a db entry (since v0.4)

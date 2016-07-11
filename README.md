@@ -336,6 +336,8 @@ Fix for issue: https://github.com/oxfamamerica/django-media-explorer/issues/3
 - You could previously only use one media field on a page - now you can have as many media fields as you want.
 - When you select an image to insert into a richtext field, via the admin page, a list of the current image sizes are listed - so you no longer have to guess which size is available.
 
+[Documentation](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.3.md)
+
 ##v0.2.0
 You can now use DME with Django 1.7+
 
@@ -345,8 +347,8 @@ You can now use DME with Django 1.7+
 [Documentation](https://github.com/oxfamamerica/django-media-explorer/blob/master/README_v0.1.md)
 
 #TODO
-- Add capability to save to AWS S3/Azzure etc.
-- Upgrade to latest Django version (Currently works on 1.7+ and 1.8+) - Add support for 1.9+
+- ~~Add capability to save to AWS S3~~
+- ~~Upgrade to latest Django version (Currently works on 1.7+ and 1.8+) - Add support for 1.9+~~
 - ~~Simplify form setup by implementing DME as Django fields.~~
 - Make it possible to resize images dynamically the first time they are accessed in a templatetag.
 

@@ -61,9 +61,19 @@ except ImportError:
 
 ```
 
-The DME application will try to resize your images during your upload. If you do not want to resize your images then set the setting **DME_RESIZE = False** somewhere in your settings.py file (after the "media_explorer.settings" import).
+Here are the DME application settings you need. Put them somewhere in your settings.py file (after the "media_explorer.settings" import).
 
-If you use your own JQuery in your admin pages and you do not want the DME application JQuery to conflict with yours then set **DME_INCLUDE_JQUERY = False** (since v0.3.6).
+```
+#The DME application will try to resize your images during your upload unless you set to False
+DME_RESIZE = False
+```
+
+These settings controls DME Admin JQuery loading (since v0.3.6).
+
+```
+#If you use your own JQuery in your admin pages and you do not want the DME application JQuery to conflict with yours then set to False
+DME_INCLUDE_JQUERY = False
+```
 
 Update these AWS settings to upload to S3 (since v0.4)
 

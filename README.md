@@ -137,6 +137,8 @@ sudo yum install zlib-devel
 
 Run this command to run all the DME tests.
 
+NOTE: The tests force DME_UPLOAD_TO_S3=False and DME_DELETE_FROM_S3=False.
+
 ```
 python manage.py test media_explorer.tests
 ```
@@ -355,6 +357,7 @@ You can now use DME with Django 1.7+
 - ~~Upgrade to latest Django version (Currently works on 1.7+ and 1.8+) - Add support for 1.9+~~
 - ~~Simplify form setup by implementing DME as Django fields.~~
 - Make it possible to resize images dynamically the first time they are accessed in a templatetag.
+- Add S3 tests
 
 
 #Contributing

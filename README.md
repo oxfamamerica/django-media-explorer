@@ -304,6 +304,9 @@ If you provide the blog object (defined above) to your page - then your template
 - Django Rest Framework upgraded to 3.1.2 since Django 1.9+ no longer provides **django.utils.datastructures.MergeDict** and **django.core.handlers.wsgi.STATUS_CODE_TEXT**.
 - Mcawber upgraded to 0.3.3 since Django 1.9+ no longer provides **django.utils.importlib.import_module**.
 
+##v0.3.9
+Adding 'manual_embed_code' field to allow for manually entering video embed code in the backend. When this is true DME will not automatically try to get the embed code.
+
 ##v0.3.7
 - Replacing file._size with file.size in media_explorer.fields since file._size is not available when the object has already been created.
 

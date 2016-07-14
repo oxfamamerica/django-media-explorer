@@ -260,10 +260,13 @@ If you provide the blog object (defined above) to your page - then your template
 
 #CHANGELOG
 
-##v0.3.7
+##v0.3.11
 - Replacing file._size with file.size in media_explorer.fields since file._size is not available when the object has already been created.
 
 - Fix for the last resized image being overritten.
+
+##v0.3.9
+Adding 'manual_embed_code' field to allow for manually entering video embed code in the backend. When this is true DME will not automatically try to get the embed code.
 
 ##v0.3.6
 

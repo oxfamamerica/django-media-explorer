@@ -8,7 +8,7 @@
 """
 
 __title__ = 'Django Media Explorer'
-__version__ = '0.3.9'
+__version__ = '0.3.10'
 __author__ = 'Oxfam America Web Team (webmaster@oxfamamerica.org)'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2016 Oxfam America'

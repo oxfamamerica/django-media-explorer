@@ -260,7 +260,7 @@ def element_post_delete(sender, instance, **kwargs):
 
     try:
         print "TODO - delete from S3"
-        if settings.DME_DELETE_S3_FILE:
+        if settings.DME_DELETE_FROM_S3:
             print "TODO - let's delete"
         #from boto.s3.connection import S3Connection
         #aws_connection = S3Connection(AWS_KEY, AWS_SECRET)

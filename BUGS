@@ -1,0 +1,1 @@
+1) When you have local files and S3 files both saved in the db - you should be able to delete either. I tested to delete a local file while DME_UPLOAD_TO_S3=True and the files failed to delete.

@@ -96,10 +96,16 @@ BOTO_BUCKET_LOCATION = "xxx"
 AWS_S3_FORCE_HTTP_URL = False
 ```
 
-Update these AWS settings to delete from S3 when you delete a db entry (since v0.4)
+Update these AWS settings to delete from S3 when you delete an Element or ResizedImage object (since v0.4)
 ```
 #Default is False
 DME_DELETE_FROM_S3 = True
+```
+
+Likewise update these settings to delete from local server when you delete an Element or ResizedImage object (since v0.4)
+```
+#Default is False
+DME_DELETE_FROM_LOCAL = True
 ```
 
 ##Create tables

@@ -64,6 +64,9 @@ CKEDITOR_CONFIGS = {
     }
 }
 
+#Upload to local server settings
+DME_DELETE_FROM_LOCAL = False
+
 #Upload to S3 settings
 DME_UPLOAD_TO_S3 = False
 DME_DELETE_FROM_S3 = False

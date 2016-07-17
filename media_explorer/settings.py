@@ -72,10 +72,10 @@ DME_UPLOAD_TO_S3 = False
 DME_DELETE_FROM_S3 = False
 
 #Boto settings
-AWS_ACCESS_KEY_ID = ""
-AWS_SECRET_ACCESS_KEY = ""
+AWS_ACCESS_KEY_ID = "xxx"
+AWS_SECRET_ACCESS_KEY = "xxx"
+BOTO_S3_BUCKET = "abc"
 #AWS_ACL_POLICY = "public-read"
-#BOTO_S3_BUCKET = ""
 #BOTO_S3_HOST = "s3.amazonaws.com"
 #BOTO_BUCKET_LOCATION = ""
 AWS_S3_FORCE_HTTP_URL = False

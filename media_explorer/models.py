@@ -209,12 +209,28 @@ def resizedimage_post_delete(sender, instance, **kwargs):
     Deletes file from filesystem when corresponding `ResizedImage` object is deleted.
     """
 
-    try:
-        if instance.local_path:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
-                os.remove(settings.PROJECT_ROOT + instance.local_path)
-    except:
-        print traceback.format_exc()
+    if settings.DME_DELETE_FROM_LOCAL:
+        try:
+            if instance.local_path:
+                if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
+                    os.remove(settings.PROJECT_ROOT + instance.local_path)
+        except:
+            print traceback.format_exc()
+
+    if settings.DME_DELETE_FROM_S3:
+        from boto.s3.connection import S3Connection
+        try:
+            aws_connection = S3Connection(
+                    settings.AWS_ACCESS_KEY_ID, 
+                    settings.AWS_SECRET_ACCESS_KEY
+                )
+            bucket = aws_connection.get_bucket(settings.BOTO_S3_BUCKET)
+
+            if instance.s3_path:
+                bucket.delete_key(instance.s3_path)
+        except:
+            print traceback.format_exc()
+
 
 def element_pre_delete(sender, instance, **kwargs):
     """
@@ -232,42 +248,49 @@ def element_post_delete(sender, instance, **kwargs):
     Deletes file from filesystem when corresponding `Element` object is deleted.
     """
 
-    try:
-        if instance.local_path:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
-                os.remove(settings.PROJECT_ROOT + instance.local_path)
-    except:
-        print traceback.format_exc()
+    if settings.DME_DELETE_FROM_LOCAL:
+        try:
+            if instance.local_path:
+                if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
+                    os.remove(settings.PROJECT_ROOT + instance.local_path)
+        except:
+            print traceback.format_exc()
 
-    try:
-        if instance.thumbnail_local_path:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_local_path):
-                os.remove(settings.PROJECT_ROOT + instance.thumbnail_local_path)
-    except:
-        print traceback.format_exc()
+        try:
+            if instance.thumbnail_local_path:
+                if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_local_path):
+                    os.remove(settings.PROJECT_ROOT + instance.thumbnail_local_path)
+        except:
+            print traceback.format_exc()
 
-    #try:
-    #    if instance.thumbnail_image_url:
-    #        if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_image_url):
-    #            os.remove(settings.PROJECT_ROOT + instance.thumbnail_image_url)
-    #except:
-    #    print traceback.format_exc()
+    if settings.DME_DELETE_FROM_S3:
+        from boto.s3.connection import S3Connection
+        try:
+            aws_connection = S3Connection(
+                    settings.AWS_ACCESS_KEY_ID, 
+                    settings.AWS_SECRET_ACCESS_KEY
+                )
+            bucket = aws_connection.get_bucket(settings.BOTO_S3_BUCKET)
+
+            if instance.s3_path:
+                try:
+                    bucket.delete_key(instance.s3_path)
+                except:
+                    print traceback.format_exc()
+
+            if instance.thumbnail_s3_path:
+                try:
+                    bucket.delete_key(instance.thumbnail_s3_path)
+                except:
+                    print traceback.format_exc()
+
+        except:
+            print traceback.format_exc()
 
     try:
         #Check to see if this thumbanil is used by gallery - if so resave the gallery to reset thumbnail
         for gallery in Gallery.objects.filter(thumbnail_image_url=instance.thumbnail_image_url):
             gallery.save()
-    except:
-        print traceback.format_exc()
-
-    try:
-        print "TODO - delete from S3"
-        if settings.DME_DELETE_FROM_S3:
-            print "TODO - let's delete"
-        #from boto.s3.connection import S3Connection
-        #aws_connection = S3Connection(AWS_KEY, AWS_SECRET)
-        #bucket = aws_connection.get_bucket('bucketname')
-        #bucket.delete_key(key)
     except:
         print traceback.format_exc()
  

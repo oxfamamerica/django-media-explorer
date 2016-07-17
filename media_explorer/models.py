@@ -36,7 +36,6 @@ def __upload_element_to_s3(instance):
 
             instance.s3_path = instance.local_path
             instance.s3_bucket = settings.BOTO_S3_BUCKET
-
             instance.image_url = s3_url
             instance.save()
         except Exception as e:
@@ -224,7 +223,7 @@ def resizedimage_post_delete(sender, instance, **kwargs):
                     settings.AWS_ACCESS_KEY_ID, 
                     settings.AWS_SECRET_ACCESS_KEY
                 )
-            bucket = aws_connection.get_bucket(settings.BOTO_S3_BUCKET)
+            bucket = aws_connection.get_bucket(instance.s3_bucket)
 
             if instance.s3_path:
                 bucket.delete_key(instance.s3_path)
@@ -270,7 +269,7 @@ def element_post_delete(sender, instance, **kwargs):
                     settings.AWS_ACCESS_KEY_ID, 
                     settings.AWS_SECRET_ACCESS_KEY
                 )
-            bucket = aws_connection.get_bucket(settings.BOTO_S3_BUCKET)
+            bucket = aws_connection.get_bucket(instance.s3_bucket)
 
             if instance.s3_path:
                 try:
@@ -422,9 +421,8 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
     signals.post_save.disconnect(resizedimage_post_save, sender=ResizedImage)
 
     #Set local path
-    if instance.image and not __file_is_remote(instance.image.url):
-        instance.image_url = instance.image.url
-        instance.local_path = instance.image.url
+    if instance.image_url and not __file_is_remote(instance.image_url):
+        instance.local_path = instance.image_url
         instance.save()
 
     #If S3 upload is set and image is local then upload to S3 then delete local
@@ -443,7 +441,8 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
 
             instance.s3_path = instance.image_url
             instance.s3_bucket = settings.BOTO_S3_BUCKET
-            instance.local_path = instance.image_url
+            #instance.local_path = instance.image_url
+            instance.local_path = None
             instance.image_url = s3_url
             instance.save()
         except Exception as e:

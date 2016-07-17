@@ -213,11 +213,19 @@ def resizedimage_post_delete(sender, instance, **kwargs):
         if instance.local_path:
             if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
                 os.remove(settings.PROJECT_ROOT + instance.local_path)
-
-            instance.local_path = None
-            instance.save()
     except:
         print traceback.format_exc()
+
+def element_pre_delete(sender, instance, **kwargs):
+    """
+    Deletes ResizedImages before it is deleted
+    """
+    
+    for ri in ResizedImages.objects.fiter(image=instance):
+        try:
+            ri.delete()
+        except:
+            print traceback.format_exc()
 
 def element_post_delete(sender, instance, **kwargs):
     """
@@ -228,9 +236,6 @@ def element_post_delete(sender, instance, **kwargs):
         if instance.local_path:
             if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
                 os.remove(settings.PROJECT_ROOT + instance.local_path)
-
-                instance.local_path = None
-                instance.save()
     except:
         print traceback.format_exc()
 
@@ -238,9 +243,6 @@ def element_post_delete(sender, instance, **kwargs):
         if instance.thumbnail_local_path:
             if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_local_path):
                 os.remove(settings.PROJECT_ROOT + instance.thumbnail_local_path)
-
-                instance.thumbnail_local_path = None
-                instance.save()
     except:
         print traceback.format_exc()
 
@@ -423,6 +425,7 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
 
 signals.post_save.connect(element_post_save, sender=Element)
 signals.post_save.connect(gallery_post_save, sender=Gallery)
+signals.pre_delete.connect(element_pre_delete, sender=Element)
 signals.post_delete.connect(element_post_delete, sender=Element)
 signals.post_delete.connect(resizedimage_post_delete, sender=ResizedImage)
 signals.post_save.connect(resizedimage_post_save, sender=ResizedImage)

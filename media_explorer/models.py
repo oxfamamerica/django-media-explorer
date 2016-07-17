@@ -421,6 +421,12 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
     #Disconnect signal here so we don't recurse when we save
     signals.post_save.disconnect(resizedimage_post_save, sender=ResizedImage)
 
+    #Set local path
+    if instance.image and not __file_is_remote(instance.image.url):
+        instance.image_url = instance.image.url
+        instance.local_path = instance.image.url
+        instance.save()
+
     #If S3 upload is set and image is local then upload to S3 then delete local
     saved_to_s3 = False
     if instance.image_url and settings.DME_UPLOAD_TO_S3 \

@@ -207,7 +207,7 @@ class RichTextField(models.TextField):
     
 
     def get_prep_value(self, value):
-        if value: return str(value)
+        if value: return unicode(value)
         return value
 
     def formfield(self, **kwargs):

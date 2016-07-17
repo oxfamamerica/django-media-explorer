@@ -237,7 +237,7 @@ def element_pre_delete(sender, instance, **kwargs):
     Deletes ResizedImages before it is deleted
     """
     
-    for ri in ResizedImages.objects.fiter(image=instance):
+    for ri in ResizedImage.objects.filter(image=instance):
         try:
             ri.delete()
         except:

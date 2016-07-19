@@ -100,18 +100,6 @@ Update these AWS settings to delete from S3 when you delete an Element or Resize
 DME_DELETE_FROM_S3 = True
 ```
 
-TODO - Remove
-
-Since DME uses boto3 to upload to S3 you will need to set the AWS credentials the recommended way below. Create the file **~/.aws/credentials** and put the credentials in that file like below:
-
-```
-[default]
-aws_access_key_id=xxx
-aws_secret_access_key=xxx
-```
-
-/TODO - Remove
-
 Likewise update these settings to delete from local server when you delete an Element or ResizedImage object (since v0.4)
 ```
 #Default is False

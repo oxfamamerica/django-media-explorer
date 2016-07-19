@@ -82,24 +82,26 @@ DME_INCLUDE_JQUERY = False
 Update these AWS settings to upload to S3 (since v0.4)
 
 ```
-#These are required
-AWS_ACCESS_KEY_ID = "xxx"
-AWS_SECRET_ACCESS_KEY = "xxx"
-BOTO_S3_BUCKET = "xxx"
+DME_S3_BUCKET = "xxx"
+DME_S3_FOLDER = "xxx"
+
 #Default is False
 DME_UPLOAD_TO_S3 = True
 
-#These are optional
-AWS_ACL_POLICY = "public-read"
-BOTO_S3_HOST = "s3.amazonaws.com"
-BOTO_BUCKET_LOCATION = "xxx"
-AWS_S3_FORCE_HTTP_URL = False
 ```
 
 Update these AWS settings to delete from S3 when you delete an Element or ResizedImage object (since v0.4)
 ```
 #Default is False
 DME_DELETE_FROM_S3 = True
+```
+
+Since DME uses boto3 to upload to S3 you will need to set the AWS credentials the recommended way below. Create the file **~/.aws/credentials** and put the credentials in that file like below:
+
+```
+[default]
+aws_access_key_id=xxx
+aws_secret_access_key=xxx
 ```
 
 Likewise update these settings to delete from local server when you delete an Element or ResizedImage object (since v0.4)

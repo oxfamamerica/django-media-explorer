@@ -5,131 +5,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
-import mimetypes
 
-def __get_s3_headers(url, public=True):
-    headers = {}
-    if public:
-        headers["ACL"] = "public-read"
-    if mimetypes.guess_type(url)[0]:
-        headers["ContentType"] = mimetypes.guess_type(url)[0]
-    return headers
-
-def __get_s3_url(url):
-    s3_url = "https://s3.amazonaws.com/"
-    s3_url += settings.DME_S3_BUCKET
-    s3_url += url
-    return s3_url
-
-def __file_is_remote(url):
-    if url.startswith("https:") or url.startswith("http:"):
-        return True
-    return False
-
-def __upload_element_to_s3(instance):
-
-    if not settings.DME_UPLOAD_TO_S3:
-        return instance
-
-    #If S3 upload is set and image is local then upload to S3 then delete local
-    saved_to_s3 = False
-    if instance.local_path and not __file_is_remote(instance.image_url):
-        try:
-            from boto3 import client as boto3Client
-            from boto3.s3.transfer import S3Transfer
-            client = boto3Client(
-                    's3', 
-                    settings.DME_S3_REGION,
-                    aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.DME_S3_SECRET_ACCESS_KEY
-                    )
-            transfer = S3Transfer(client)
-            # Upload /tmp/myfile to s3://bucket/key
-            s3_key = instance.local_path.lstrip("/")
-            if settings.DME_S3_FOLDER:
-                s3_key = settings.DME_S3_FOLDER.strip("/")
-                s3_key += "/"
-                s3_key += instance.local_path.lstrip("/")
-
-            transfer.upload_file(
-                    str(settings.PROJECT_ROOT + instance.local_path),
-                    settings.DME_S3_BUCKET,
-                    s3_key,
-                    extra_args=__get_s3_headers(s3_key)
-                    )
-
-            saved_to_s3 = True
-            s3_url = __get_s3_url(instance.local_path)
-
-            instance.s3_path = instance.local_path
-            instance.s3_bucket = settings.DME_S3_BUCKET
-            instance.image_url = s3_url
-            instance.save()
-        except Exception as e:
-            print traceback.format_exc()
-
-    #If S3 upload is set and thumbnail image is local then upload to S3 then delete local
-    thumbnail_saved_to_s3 = False
-    if instance.thumbnail_local_path and not __file_is_remote(instance.thumbnail_image_url):
-        try:
-            from boto3 import client as boto3Client
-            from boto3.s3.transfer import S3Transfer
-            client = boto3Client(
-                    's3', 
-                    settings.DME_S3_REGION,
-                    aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.DME_S3_SECRET_ACCESS_KEY
-                    )
-            transfer = S3Transfer(client)
-            # Upload /tmp/myfile to s3://bucket/key
-            s3_key = instance.thumbnail_local_path.lstrip("/")
-            if settings.DME_S3_FOLDER:
-                s3_key = settings.DME_S3_FOLDER.strip("/")
-                s3_key += "/"
-                s3_key += instance.thumbnail_local_path.lstrip("/")
-
-            transfer.upload_file(
-                    str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
-                    settings.DME_S3_BUCKET,
-                    s3_key,
-                    extra_args=__get_s3_headers(s3_key)
-                    )
-
-            saved_to_s3 = True
-            s3_url = __get_s3_url(instance.thumbnail_local_path)
-
-            instance.thumbnail_s3_path = instance.thumbnail_local_path
-            instance.thumbnail_s3_bucket = settings.DME_S3_BUCKET
-            instance.thumbnail_image_url = s3_url
-            instance.save()
-
-        except Exception as e:
-            print traceback.format_exc()
-
-
-    if saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
-                os.remove(settings.PROJECT_ROOT + instance.local_path)
-                instance.image = s3_url
-                instance.local_path = None
-                instance.save()
-
-        except:
-            print traceback.format_exc()
-
-    if thumbnail_saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.thumbnail_local_path):
-                os.remove(settings.PROJECT_ROOT + instance.thumbnail_local_path)
-                instance.thumbnail_image = thumbnail_s3_url
-                instance.thumbnail_local_path = None
-                instance.save()
-
-        except:
-            print traceback.format_exc()
-
-    return instance
+from .helpers import S3Helper
+s3_helper = S3Helper()
 
 
 class Element(models.Model):
@@ -371,7 +249,7 @@ def element_post_save(sender, instance, created, **kwargs):
     if instance.video_url or instance.video_embed:
         instance.type = "video"
 
-    if instance.image and not __file_is_remote(instance.image.url):
+    if instance.image and not s3_helper.file_is_remote(instance.image.url):
         instance.image_url = instance.image.url
         instance.local_path = instance.image.url
       	instance.file_name = os.path.basename(str(instance.image_url))
@@ -380,7 +258,7 @@ def element_post_save(sender, instance, created, **kwargs):
 
         instance.thumbnail_image = instance.image
 
-    if instance.thumbnail_image and not __file_is_remote(instance.thumbnail_image.url):
+    if instance.thumbnail_image and not s3_helper.file_is_remote(instance.thumbnail_image.url):
         instance.thumbnail_image_url = instance.thumbnail_image.url
         instance.thumbnail_local_path = instance.thumbnail_image.url
 
@@ -418,13 +296,13 @@ def element_post_save(sender, instance, created, **kwargs):
                 if rtn["thumbnail_image_url"]:
                     instance.thumbnail_image = None
                     instance.thumbnail_image_url = rtn["thumbnail_image_url"]
-                    if not __file_is_remote(instance.thumbnail_image_url):
+                    if not s3_helper.file_is_remote(instance.thumbnail_image_url):
                         instance.thumbnail_local_path = instance.thumbnail_image_url
                     instance.save()
 
                 #Now go through ResizedImages and delete local files
                 for r in ResizedImage.objects.filter(image=instance):
-                    if r.local_path and __file_is_remote(r.image_url) \
+                    if r.local_path and s3_helper.file_is_remote(r.image_url) \
                             and not Element.objects.filter(local_path=r.local_path).exists() \
                             and not Element.objects.filter(thumbnail_local_path=r.local_path).exists():
                         try:
@@ -439,7 +317,7 @@ def element_post_save(sender, instance, created, **kwargs):
 
 
                 #Now upload Element to S3
-                instance = __upload_element_to_s3(instance)
+                instance = s3_helper.upload_element_to_s3(instance)
 
             else:
                 print rtn["message"]
@@ -455,7 +333,7 @@ def element_post_save(sender, instance, created, **kwargs):
     #If S3 upload is set and image is local then upload to S3 then delete local
     if instance.image and settings.DME_UPLOAD_TO_S3 \
             and not settings.DME_RESIZE:
-        instance = __upload_element_to_s3(instance)
+        instance = s3_helper.upload_element_to_s3(instance)
 
     #Reconnect signal
     signals.post_save.connect(element_post_save, sender=Element)
@@ -466,14 +344,14 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
     signals.post_save.disconnect(resizedimage_post_save, sender=ResizedImage)
 
     #Set local path
-    if instance.image_url and not __file_is_remote(instance.image_url):
+    if instance.image_url and not s3_helper.file_is_remote(instance.image_url):
         instance.local_path = instance.image_url
         instance.save()
 
     #If S3 upload is set and image is local then upload to S3 then delete local
     saved_to_s3 = False
     if instance.image_url and settings.DME_UPLOAD_TO_S3 \
-            and not __file_is_remote(instance.image_url):
+            and not s3_helper.file_is_remote(instance.image_url):
         try:
             from boto3 import client as boto3Client
             from boto3.s3.transfer import S3Transfer
@@ -484,21 +362,18 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
                     aws_secret_access_key=settings.DME_S3_SECRET_ACCESS_KEY
                     )
             transfer = S3Transfer(client)
-            s3_key = instance.image_url.lstrip("/")
-            if settings.DME_S3_FOLDER:
-                s3_key = settings.DME_S3_FOLDER.strip("/")
-                s3_key += "/"
-                s3_key += instance.image_url.lstrip("/")
+
+            s3_key = s3_helper.get_s3_path(instance.local_path)
 
             transfer.upload_file(
                     str(settings.PROJECT_ROOT + instance.image_url),
                     settings.DME_S3_BUCKET,
                     s3_key,
-                    extra_args=__get_s3_headers(s3_key)
+                    extra_args=s3_helper.get_s3_headers(s3_key)
                     )
 
             saved_to_s3 = True
-            s3_url = __get_s3_url(instance.image_url)
+            s3_url = s3_helper.get_s3_url(instance.image_url)
 
             instance.s3_path = instance.image_url
             instance.s3_bucket = settings.DME_S3_BUCKET

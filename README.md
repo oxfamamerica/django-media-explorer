@@ -87,7 +87,7 @@ DME_S3_SECRET_ACCESS_KEY = "xxx"
 DME_S3_BUCKET = "xxx"
 #Default is us-east-1
 DME_S3_REGION = "us-east-1"
-DME_S3_FOLDER = ""
+DME_S3_FOLDER = "path/to/my/s3/file/"
 
 #Default is False
 DME_UPLOAD_TO_S3 = True

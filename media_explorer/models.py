@@ -8,7 +8,7 @@ from django.conf import settings
 
 def __get_s3_url(url):
     s3_url = "https://s3.amazonaws.com/"
-    s3_url += settings.BOTO_S3_BUCKET
+    s3_url += settings.DME_S3_BUCKET
     s3_url += url
     return s3_url
 

@@ -26,16 +26,33 @@ def __upload_element_to_s3(instance):
     saved_to_s3 = False
     if instance.local_path and not __file_is_remote(instance.image_url):
         try:
-            from django_boto.s3 import upload
-            upload(
-                str(settings.PROJECT_ROOT + instance.local_path),
-                name=instance.local_path, 
-                force_http=False)
+            from boto3 import client as boto3Client
+            from boto3.s3.transer import S3Transfer
+            client = boto3Client(
+                    's3', 
+                    settings.DME_S3_REGION,
+                    aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
+                    aws_secret_access=settings.DME_S3_SECRET_ACCESS_KEY
+                    )
+            transfer = S3Transfer(client)
+            # Upload /tmp/myfile to s3://bucket/key
+            s3_key = instance.local_path.lstrip("/")
+            if settings.DME_S3_FOLDER:
+                s3_key = settings.DME_S3_FOLDER.strip("/")
+                s3_key += "/"
+                s3_key += instance.local_path.lstrip("/")
+
+            transfer.upload_file(
+                    str(settings.PROJECT_ROOT + instance.local_path),
+                    settings.DME_S3_BUCKET,
+                    s3_key
+                    )
+
             saved_to_s3 = True
             s3_url = __get_s3_url(instance.local_path)
 
             instance.s3_path = instance.local_path
-            instance.s3_bucket = settings.BOTO_S3_BUCKET
+            instance.s3_bucket = settings.DME_S3_BUCKET
             instance.image_url = s3_url
             instance.save()
         except Exception as e:
@@ -45,19 +62,36 @@ def __upload_element_to_s3(instance):
     thumbnail_saved_to_s3 = False
     if instance.thumbnail_local_path and not __file_is_remote(instance.thumbnail_image_url):
         try:
-            from django_boto.s3 import upload
-            upload(
-                str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
-                name=instance.thumbnail_local_path,
-                force_http=False)
-            thumbnail_saved_to_s3 = True
-            thumbnail_s3_url = __get_s3_url(instance.thumbnail_local_path)
+            from boto3 import client as boto3Client
+            from boto3.s3.transer import S3Transfer
+            client = boto3Client(
+                    's3', 
+                    settings.DME_S3_REGION,
+                    aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
+                    aws_secret_access=settings.DME_S3_SECRET_ACCESS_KEY
+                    )
+            transfer = S3Transfer(client)
+            # Upload /tmp/myfile to s3://bucket/key
+            s3_key = instance.thumbnail_local_path.lstrip("/")
+            if settings.DME_S3_FOLDER:
+                s3_key = settings.DME_S3_FOLDER.strip("/")
+                s3_key += "/"
+                s3_key += instance.thumbnail_local_path.lstrip("/")
+
+            transfer.upload_file(
+                    str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
+                    settings.DME_S3_BUCKET,
+                    s3_key
+                    )
+
+            saved_to_s3 = True
+            s3_url = __get_s3_url(instance.thumbnail_local_path)
 
             instance.thumbnail_s3_path = instance.thumbnail_local_path
-            instance.thumbnail_s3_bucket = settings.BOTO_S3_BUCKET
-
-            instance.thumbnail_image_url = thumbnail_s3_url
+            instance.thumbnail_s3_bucket = settings.DME_S3_BUCKET
+            instance.thumbnail_image_url = s3_url
             instance.save()
+
         except Exception as e:
             print traceback.format_exc()
 

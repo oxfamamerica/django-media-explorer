@@ -5,6 +5,15 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db.models import signals
 from django.conf import settings
+import mimetypes
+
+def __get_s3_headers(url, public=True):
+    headers = {}
+    if public:
+        headers["ACL"] = "public-read"
+    if mimetypes.guess_type(url)[0]:
+        headers["ContentType"] = mimetypes.guess_type(url)[0]
+    return headers
 
 def __get_s3_url(url):
     s3_url = "https://s3.amazonaws.com/"
@@ -46,7 +55,7 @@ def __upload_element_to_s3(instance):
                     str(settings.PROJECT_ROOT + instance.local_path),
                     settings.DME_S3_BUCKET,
                     s3_key,
-                    extra_args={'ACL': 'public-read'}
+                    extra_args=__get_s3_headers(s3_key)
                     )
 
             saved_to_s3 = True
@@ -83,7 +92,7 @@ def __upload_element_to_s3(instance):
                     str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
                     settings.DME_S3_BUCKET,
                     s3_key,
-                    extra_args={'ACL': 'public-read'}
+                    extra_args=__get_s3_headers(s3_key)
                     )
 
             saved_to_s3 = True
@@ -485,7 +494,7 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
                     str(settings.PROJECT_ROOT + instance.image_url),
                     settings.DME_S3_BUCKET,
                     s3_key,
-                    extra_args={'ACL': 'public-read'}
+                    extra_args=__get_s3_headers(s3_key)
                     )
 
             saved_to_s3 = True
@@ -497,7 +506,6 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
             #instance.local_path = None
             instance.save()
 
-            #TODO - delete from resizedimage
 
         except Exception as e:
             print traceback.format_exc()

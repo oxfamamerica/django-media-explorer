@@ -45,7 +45,8 @@ def __upload_element_to_s3(instance):
             transfer.upload_file(
                     str(settings.PROJECT_ROOT + instance.local_path),
                     settings.DME_S3_BUCKET,
-                    s3_key
+                    s3_key,
+                    extra_args={'ACL': 'public-read'}
                     )
 
             saved_to_s3 = True
@@ -81,7 +82,8 @@ def __upload_element_to_s3(instance):
             transfer.upload_file(
                     str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
                     settings.DME_S3_BUCKET,
-                    s3_key
+                    s3_key,
+                    extra_args={'ACL': 'public-read'}
                     )
 
             saved_to_s3 = True
@@ -482,7 +484,8 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
             transfer.upload_file(
                     str(settings.PROJECT_ROOT + instance.image_url),
                     settings.DME_S3_BUCKET,
-                    s3_key
+                    s3_key,
+                    extra_args={'ACL': 'public-read'}
                     )
 
             saved_to_s3 = True

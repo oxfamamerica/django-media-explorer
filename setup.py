@@ -36,6 +36,7 @@ setup(
         'djangorestframework==3.1.2',
         'Pillow>=2.6.1',
         'django-ckeditor==4.4.8',
+        'boto3',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

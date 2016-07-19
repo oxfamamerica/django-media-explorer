@@ -27,12 +27,12 @@ def __upload_element_to_s3(instance):
     if instance.local_path and not __file_is_remote(instance.image_url):
         try:
             from boto3 import client as boto3Client
-            from boto3.s3.transer import S3Transfer
+            from boto3.s3.transfer import S3Transfer
             client = boto3Client(
                     's3', 
                     settings.DME_S3_REGION,
                     aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
-                    aws_secret_access=settings.DME_S3_SECRET_ACCESS_KEY
+                    aws_secret_access_key=settings.DME_S3_SECRET_ACCESS_KEY
                     )
             transfer = S3Transfer(client)
             # Upload /tmp/myfile to s3://bucket/key
@@ -63,12 +63,12 @@ def __upload_element_to_s3(instance):
     if instance.thumbnail_local_path and not __file_is_remote(instance.thumbnail_image_url):
         try:
             from boto3 import client as boto3Client
-            from boto3.s3.transer import S3Transfer
+            from boto3.s3.transfer import S3Transfer
             client = boto3Client(
                     's3', 
                     settings.DME_S3_REGION,
                     aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
-                    aws_secret_access=settings.DME_S3_SECRET_ACCESS_KEY
+                    aws_secret_access_key=settings.DME_S3_SECRET_ACCESS_KEY
                     )
             transfer = S3Transfer(client)
             # Upload /tmp/myfile to s3://bucket/key
@@ -464,22 +464,48 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
     if instance.image_url and settings.DME_UPLOAD_TO_S3 \
             and not __file_is_remote(instance.image_url):
         try:
-            from django_boto.s3 import upload
-            upload(
-                str(settings.PROJECT_ROOT + instance.image_url),
-                name=str(instance.image_url), 
-                force_http=False)
+            from boto3 import client as boto3Client
+            from boto3.s3.transfer import S3Transfer
+            client = boto3Client(
+                    's3', 
+                    settings.DME_S3_REGION,
+                    aws_access_key_id=settings.DME_S3_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.DME_S3_SECRET_ACCESS_KEY
+                    )
+            transfer = S3Transfer(client)
+            s3_key = instance.image_url.lstrip("/")
+            if settings.DME_S3_FOLDER:
+                s3_key = settings.DME_S3_FOLDER.strip("/")
+                s3_key += "/"
+                s3_key += instance.image_url.lstrip("/")
+
+            transfer.upload_file(
+                    str(settings.PROJECT_ROOT + instance.image_url),
+                    settings.DME_S3_BUCKET,
+                    s3_key
+                    )
 
             saved_to_s3 = True
-            s3_url = __get_s3_url(str(instance.image_url))
+            s3_url = __get_s3_url(instance.image_url)
 
             instance.s3_path = instance.image_url
-            instance.s3_bucket = settings.BOTO_S3_BUCKET
-            #instance.local_path = instance.image_url
-            instance.local_path = None
+            instance.s3_bucket = settings.DME_S3_BUCKET
             instance.image_url = s3_url
+            #instance.local_path = None
             instance.save()
+
+            #TODO - delete from resizedimage
+
         except Exception as e:
+            print traceback.format_exc()
+
+    if saved_to_s3:
+        try:
+            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
+                os.remove(settings.PROJECT_ROOT + instance.local_path)
+                instance.local_path = None
+                instance.save()
+        except:
             print traceback.format_exc()
 
     #Reconnect signal

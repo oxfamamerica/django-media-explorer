@@ -502,15 +502,6 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
         except Exception as e:
             print traceback.format_exc()
 
-    if saved_to_s3:
-        try:
-            if os.path.isfile(settings.PROJECT_ROOT + instance.local_path):
-                os.remove(settings.PROJECT_ROOT + instance.local_path)
-                instance.local_path = None
-                instance.save()
-        except:
-            print traceback.format_exc()
-
     #Reconnect signal
     signals.post_save.connect(resizedimage_post_save, sender=ResizedImage)
 

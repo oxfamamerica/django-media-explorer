@@ -363,22 +363,21 @@ def resizedimage_post_save(sender, instance, created, **kwargs):
                     )
             transfer = S3Transfer(client)
 
-            s3_key = s3_helper.get_s3_path(instance.local_path)
+            s3_path = s3_helper.get_s3_path(instance.local_path)
 
             transfer.upload_file(
                     str(settings.PROJECT_ROOT + instance.image_url),
                     settings.DME_S3_BUCKET,
-                    s3_key,
-                    extra_args=s3_helper.get_s3_headers(s3_key)
+                    s3_path,
+                    extra_args=s3_helper.get_s3_headers(s3_path)
                     )
 
             saved_to_s3 = True
-            s3_url = s3_helper.get_s3_url(instance.image_url)
+            s3_url = s3_helper.get_s3_url(s3_path)
 
-            instance.s3_path = instance.image_url
+            instance.s3_path = s3_path
             instance.s3_bucket = settings.DME_S3_BUCKET
             instance.image_url = s3_url
-            #instance.local_path = None
             instance.save()
 
 

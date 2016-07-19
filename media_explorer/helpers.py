@@ -33,11 +33,11 @@ class S3Helper(object):
             s3_path += path.lstrip("/")
         return s3_path
 
-    def get_s3_url(self, url):
+    def get_s3_url(self, path):
         s3_url = "https://s3.amazonaws.com/"
         s3_url += settings.DME_S3_BUCKET
         s3_url += "/"
-        s3_url += self.get_s3_path(url)
+        s3_url += path
         return s3_url
 
     def file_is_remote(self, url):
@@ -64,19 +64,19 @@ class S3Helper(object):
                         )
                 transfer = S3Transfer(client)
 
-                s3_key = self.get_s3_path(instance.local_path)
+                s3_path = self.get_s3_path(instance.local_path)
 
                 transfer.upload_file(
                         str(settings.PROJECT_ROOT + instance.local_path),
                         settings.DME_S3_BUCKET,
-                        s3_key,
-                        extra_args=self.get_s3_headers(s3_key)
+                        s3_path,
+                        extra_args=self.get_s3_headers(s3_path)
                         )
 
                 saved_to_s3 = True
-                s3_url = self.get_s3_url(instance.local_path)
+                s3_url = self.get_s3_url(s3_path)
 
-                instance.s3_path = instance.local_path
+                instance.s3_path = s3_path
                 instance.s3_bucket = settings.DME_S3_BUCKET
                 instance.image_url = s3_url
                 instance.save()
@@ -97,19 +97,19 @@ class S3Helper(object):
                         )
                 transfer = S3Transfer(client)
 
-                s3_key = self.get_s3_path(instance.local_path)
+                s3_path = self.get_s3_path(instance.thumbnail_local_path)
 
                 transfer.upload_file(
                         str(settings.PROJECT_ROOT + instance.thumbnail_local_path),
                         settings.DME_S3_BUCKET,
-                        s3_key,
-                        extra_args=self.get_s3_headers(s3_key)
+                        s3_path,
+                        extra_args=self.get_s3_headers(s3_path)
                         )
 
                 saved_to_s3 = True
-                s3_url = self.get_s3_url(instance.thumbnail_local_path)
+                s3_url = self.get_s3_url(s3_path)
 
-                instance.thumbnail_s3_path = instance.thumbnail_local_path
+                instance.thumbnail_s3_path = s3_path
                 instance.thumbnail_s3_bucket = settings.DME_S3_BUCKET
                 instance.thumbnail_image_url = s3_url
                 instance.save()

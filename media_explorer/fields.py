@@ -99,7 +99,9 @@ class MediaField(models.TextField):
             raise ValidationError("Invalid media type selected for this MediaField instance. It expected a '%s' but got a '%s' instead." % (self.type, media.type))
 
         #Override id/credit/caption
-        if self.id : media.id = self.id
+        #if self.id: media.id = self.id
+        if self.id and isinstance(self.id, int):
+            media.id = self.id
         if self.type: media.type = self.type
         if self.caption : media.caption = self.caption
         if self.credit: media.credit = self.credit

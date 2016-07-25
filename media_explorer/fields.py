@@ -162,26 +162,23 @@ class MediaField(models.TextField):
         return super(MediaField, self).formfield(**defaults)
 
 
+class RichTextNew(unicode):
+    """The corresponding Python object for the Django RichTextField."""
+
+    def __init__(self,text):
+        self.text = text
+
+    def __repr__(self):
+        return self.text
+
 class RichText(object):
     """The corresponding Python object for the Django RichTextField."""
 
     def __init__(self,text):
         self.text = text
 
-    def __str__(self):
-        return self.text
-
     def __repr__(self):
         return self.text
-
-    def __add__(self, other):
-        return str(self) + other
-
-    def __radd__(self, other):
-        return other + str(self)
-
-    def __len__(self):
-        return len(self.text)
 
 class RichTextField(models.TextField):
     """The Django RichTextField."""

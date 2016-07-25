@@ -161,16 +161,6 @@ class MediaField(models.TextField):
         defaults.update(kwargs)
         return super(MediaField, self).formfield(**defaults)
 
-
-class RichTextNew(unicode):
-    """The corresponding Python object for the Django RichTextField."""
-
-    def __init__(self,text):
-        self.text = text
-
-    def __repr__(self):
-        return self.text
-
 class RichText(object):
     """The corresponding Python object for the Django RichTextField."""
 

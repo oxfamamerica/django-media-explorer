@@ -168,8 +168,17 @@ class RichText(object):
     def __init__(self,text):
         self.text = text
 
+    def __str__(self):
+        return self.text
+
     def __repr__(self):
         return self.text
+
+    def __add__(self, other):
+        return str(self) + other
+
+    def __radd__(self, other):
+        return other + str(self)
 
 class RichTextField(models.TextField):
     """The Django RichTextField."""

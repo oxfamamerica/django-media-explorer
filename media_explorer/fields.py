@@ -180,6 +180,9 @@ class RichText(object):
     def __radd__(self, other):
         return other + str(self)
 
+    def __len__(self):
+        return len(self.text)
+
 class RichTextField(models.TextField):
     """The Django RichTextField."""
 

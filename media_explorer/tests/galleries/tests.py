@@ -66,6 +66,7 @@ class GalleryTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     @override_settings(DME_RESIZE=False)
+    @override_settings(DME_UPLOAD_TO_S3=False)
     def test_add_image_with_credit_and_video_during_gallery_creation(self):
         """
         Test image upload with no resize

@@ -50,6 +50,7 @@ class ElementTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     @override_settings(DME_RESIZE=False)
+    @override_settings(DME_UPLOAD_TO_S3=False)
     def test_image_upload_with_no_resize(self):
         """
         Test image upload with no resize
@@ -78,6 +79,7 @@ class ElementTests(TestCase):
         self.assertEqual(count2, 0)
 
     @override_settings(DME_RESIZE=True)
+    @override_settings(DME_UPLOAD_TO_S3=False)
     def test_image_upload_with_resize(self):
         """
         Test image upload with resize

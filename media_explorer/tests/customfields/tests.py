@@ -21,9 +21,11 @@ class CustomFieldTests(TestCase):
 
     def test_media_field_type(self):
         f = MediaField()
-        self.assertEqual(f.db_parameters(connection)['type'], 'text')
+        #self.assertEqual(f.db_parameters(connection)['type'], 'text')
+        self.assertIn(f.db_parameters(connection)['type'], ['longtext', 'text'])
 
     @override_settings(DME_RESIZE=False)
+    @override_settings(DME_UPLOAD_TO_S3=False)
     def test_mediafield_assign_image_to_video_field(self):
         """
         Test image assignment to MediaField with type=video

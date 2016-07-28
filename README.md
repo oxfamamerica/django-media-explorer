@@ -305,6 +305,7 @@ If you provide the blog object (defined above) to your page - then your template
 #CHANGELOG
 
 ##v0.4
+- Added capability to upload to S3 by setting DME_UPLOAD_TO_S3=True
 - Django Rest Framework upgraded to 3.1.2 since Django 1.9+ no longer provides **django.utils.datastructures.MergeDict** and **django.core.handlers.wsgi.STATUS_CODE_TEXT**.
 - Mcawber upgraded to 0.3.3 since Django 1.9+ no longer provides **django.utils.importlib.import_module**.
 

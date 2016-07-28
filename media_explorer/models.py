@@ -64,7 +64,7 @@ class Gallery(models.Model):
     The Gallery model will contain info about our media gallery
     """
 
-    name = models.CharField(max_length=100,blank=True,null=True)
+    name = models.CharField(max_length=255)
     short_code = models.CharField(max_length=100,blank=True,null=True)
     description = models.TextField(blank=True,null=True)
     thumbnail_image = models.ImageField(blank=True,null=True,max_length=255,upload_to="images/")

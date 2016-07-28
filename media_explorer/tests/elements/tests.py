@@ -51,6 +51,7 @@ class ElementTests(TestCase):
 
     @override_settings(DME_RESIZE=False)
     @override_settings(DME_UPLOAD_TO_S3=False)
+    @override_settings(DME_DELETE_FROM_S3=False)
     def test_image_upload_with_no_resize(self):
         """
         Test image upload with no resize
@@ -80,6 +81,7 @@ class ElementTests(TestCase):
 
     @override_settings(DME_RESIZE=True)
     @override_settings(DME_UPLOAD_TO_S3=False)
+    @override_settings(DME_DELETE_FROM_S3=False)
     def test_image_upload_with_resize(self):
         """
         Test image upload with resize

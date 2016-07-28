@@ -26,6 +26,7 @@ class CustomFieldTests(TestCase):
 
     @override_settings(DME_RESIZE=False)
     @override_settings(DME_UPLOAD_TO_S3=False)
+    @override_settings(DME_DELETE_FROM_S3=False)
     def test_mediafield_assign_image_to_video_field(self):
         """
         Test image assignment to MediaField with type=video

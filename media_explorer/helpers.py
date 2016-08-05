@@ -41,7 +41,10 @@ class S3Helper(object):
         return s3_url
 
     def file_is_remote(self, url):
-        if url.startswith("https:") or url.startswith("http:"):
+        if "https:" in url \
+                or "http:" in url \
+                or "http%3A" in url \
+                or "https%3A" in url:
             return True
         return False
 

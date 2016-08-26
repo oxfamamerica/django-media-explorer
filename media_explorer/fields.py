@@ -107,14 +107,14 @@ class MediaField(models.TextField):
         if self.credit: media.credit = self.credit
 
         #Validate that the image/video is in the system
-        if media.type in ["image","video"] and \
-                not Element.objects.filter(id=media.id,type=media.type).exists():
-            raise ValidationError("Invalid %s selected. The %s was not found." % (media.type, media.type))
+        #if media.type in ["image","video"] and \
+        #        not Element.objects.filter(id=media.id,type=media.type).exists():
+        #    raise ValidationError("Invalid %s selected. The %s was not found." % (media.type, media.type))
 
         #Validate that the gallery is in the system
-        if media.type == "gallery" and \
-                not Gallery.objects.filter(id=media.id).exists():
-            raise ValidationError("Invalid %s selected. The %s was not found." % (media.type, media.type))
+        #if media.type == "gallery" and \
+        #        not Gallery.objects.filter(id=media.id).exists():
+        #    raise ValidationError("Invalid %s selected. The %s was not found." % (media.type, media.type))
 
         return media
 

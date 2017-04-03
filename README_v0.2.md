@@ -8,7 +8,6 @@ A Django application to manage your images, video links, embeds and create slide
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [How it works](#how-it-works)
-- [Demo](#demo)
 - [Contributing](#contributing)
 - [Credits](#credits)
 
@@ -199,10 +198,6 @@ After you implement it in your apps you can display the media in your templates 
 ```
 {% if story.content %}{{ story.content | show_short_code | safe }}{% endif %}
 ```
-
-#Demo
-
-Go to http://demos.oxfamamerica.org for a demo on this application.
 
 #TODO
 - Add capability to save to AWS S3/Azzure etc.

@@ -93,7 +93,6 @@ def get_image_url_from_size(id, *args):
 
 def show_short_code(html):
     try:
-
         pattern_img = r'\[media-explorer-image-(?P<id>\d+)\]?'
         pattern_video = r'\[media-explorer-video-(?P<id>\d+)\]?'
         pattern_gallery = r'\[media-explorer-gallery-(?P<id>\d+)\]?'

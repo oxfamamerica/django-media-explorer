@@ -34,7 +34,8 @@ def get_video(id):
 
     return ""
 
-def get_media_gallery(id,template="media_explorer/gallery_slick.html"):
+
+def get_media_gallery(id, template="media_explorer/gallery_slick.html"):
     try:
         t = get_template(template)
         gallery = Gallery.objects.get(id=id)
@@ -96,7 +97,6 @@ def show_short_code(html):
         pattern_img = r'\[media-explorer-image-(?P<id>\d+)\]?'
         pattern_video = r'\[media-explorer-video-(?P<id>\d+)\]?'
         pattern_gallery = r'\[media-explorer-gallery-(?P<id>\d+)\]?'
-
         match_img = re.findall(pattern_img, str(html), re.DOTALL)
         match_video = re.findall(pattern_video, str(html), re.DOTALL)
         match_gallery = re.findall(pattern_gallery, str(html), re.DOTALL)
@@ -120,7 +120,7 @@ def show_short_code(html):
     except:
         print traceback.format_exc()
 
-    return ""
+    return html
 
 register.filter('show_short_code', show_short_code)
 register.filter('has_size', has_size)

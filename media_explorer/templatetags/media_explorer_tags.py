@@ -92,34 +92,31 @@ def get_image_url_from_size(id, *args):
 
 
 def show_short_code(html):
+    content = html
     try:
         pattern_img = r'\[media-explorer-image-(?P<id>\d+)\]?'
         pattern_video = r'\[media-explorer-video-(?P<id>\d+)\]?'
         pattern_gallery = r'\[media-explorer-gallery-(?P<id>\d+)\]?'
-        match_img = re.findall(pattern_img, str(html), re.DOTALL)
-        match_video = re.findall(pattern_video, str(html), re.DOTALL)
-        match_gallery = re.findall(pattern_gallery, str(html), re.DOTALL)
-
+        match_img = re.findall(pattern_img, str(content), re.DOTALL)
+        match_video = re.findall(pattern_video, str(content), re.DOTALL)
+        match_gallery = re.findall(pattern_gallery, str(content), re.DOTALL)
         if match_img:
             for id in match_img:
                 html2 = get_inline_image(id)
-                html = re.sub(pattern_img,html2,str(html))
-
+                content = re.sub(pattern_img, html2, str(content))
         if match_video:
             for id in match_video:
                 html2 = get_video(id)
-                html = re.sub(pattern_video,html2,str(html))
-
+                content = re.sub(pattern_video, html2, str(content))
         if match_gallery:
             for id in match_gallery:
                 html2 = get_media_gallery(id)
-                html = re.sub(pattern_gallery,html2,str(html))
-
-        return html
+                content = re.sub(pattern_gallery, html2, str(content))
+        #return content
     except:
         print traceback.format_exc()
 
-    return html
+    return content
 
 register.filter('show_short_code', show_short_code)
 register.filter('has_size', has_size)

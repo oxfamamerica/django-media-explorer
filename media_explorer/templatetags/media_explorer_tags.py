@@ -8,7 +8,7 @@ from media_explorer.models import Element, Gallery, GalleryElement, ResizedImage
 from django.template import Context
 from django.template.loader import get_template
 import traceback
-from oxfam.core.logging.logger import logger
+#from oxfam.core.logging.logger import logger
 
 register = template.Library()
 

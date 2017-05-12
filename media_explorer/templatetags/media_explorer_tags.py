@@ -94,7 +94,7 @@ def get_image_url_from_size(id, *args):
 
 def show_short_code(html):
     content = html.encode('utf-8')
-    logger.error("content {0}".format(content))
+    #logger.error("content {0}".format(content))
     try:
         pattern_img = r'\[media-explorer-image-(?P<id>\d+)\]?'
         pattern_video = r'\[media-explorer-video-(?P<id>\d+)\]?'

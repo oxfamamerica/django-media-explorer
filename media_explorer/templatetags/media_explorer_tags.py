@@ -8,6 +8,7 @@ from media_explorer.models import Element, Gallery, GalleryElement, ResizedImage
 from django.template import Context
 from django.template.loader import get_template
 import traceback
+from oxfam.core.logging.logger import logger
 
 register = template.Library()
 
@@ -92,14 +93,21 @@ def get_image_url_from_size(id, *args):
 
 
 def show_short_code(html):
-    content = html
+    content = html.encode('utf-8')
+    logger.error("content {0}".format(content))
     try:
         pattern_img = r'\[media-explorer-image-(?P<id>\d+)\]?'
         pattern_video = r'\[media-explorer-video-(?P<id>\d+)\]?'
         pattern_gallery = r'\[media-explorer-gallery-(?P<id>\d+)\]?'
+        #logger.error("pattern_img {0}".format(pattern_img))
+        #logger.error("pattern_video {0}".format(pattern_video))
+        #logger.error("pattern_gallery {0}".format(pattern_gallery))
         match_img = re.findall(pattern_img, str(content), re.DOTALL)
+        #logger.error("match_img {0}".format(match_img))
         match_video = re.findall(pattern_video, str(content), re.DOTALL)
+        #logger.error("match_video {0}".format(match_video))
         match_gallery = re.findall(pattern_gallery, str(content), re.DOTALL)
+        #logger.error("match_gallery {0}".format(match_gallery))
         if match_img:
             for id in match_img:
                 html2 = get_inline_image(id)
